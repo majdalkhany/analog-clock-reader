@@ -3,8 +3,9 @@ import cv2 as cv
 import numpy as np
 import math
 
-lowerThreshold = 100
-upperThreshold = 200
+cannyLowerThreshold = 100
+cannyUpperThreshold = 200
+houghLinesThreshold = 90
 
 # This function is for detecting the clock's outer circumference using Hough Transform
 # Recieves image as input and returns the same image cropped around the circle
@@ -24,9 +25,9 @@ def isolateClock(clockImg):
     return gray[(y-r):(y+r), (x-r):(x+r)]
 
 def detectClockHands(clockImg):
-    edges = cv.Canny(clockImg, lowerThreshold, upperThreshold)
+    edges = cv.Canny(clockImg, cannyLowerThreshold, cannyUpperThreshold)
 
-    lines = cv.HoughLines(edges, 1, np.pi / 180, 100)
+    lines = cv.HoughLines(edges, 1, np.pi / 180, houghLinesThreshold)
 
     # Remove lines that do not pass through center (ie. are not clock hands)
     h = clockImg.shape[0]
@@ -34,7 +35,8 @@ def detectClockHands(clockImg):
     c = (h // 2, w // 2)
 
     # Center radius that clock hands should pass through
-    r = 10
+    # This size is relative to the size of the image
+    r = h // 30
 
     # Source: https://docs.opencv.org/3.4/d9/db0/tutorial_hough_lines.html
     goodLines = []
@@ -67,7 +69,7 @@ clockImg = cv.imread("images/" + sys.argv[1])
 isolatedImg = isolateClock(clockImg)
 hands = detectClockHands(isolatedImg)
 
-cv.imshow("Circle Detection", hands)
+cv.imshow("Clock", hands)
 cv.waitKey(0)
 cv.destroyAllWindows()
 
