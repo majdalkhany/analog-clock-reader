@@ -3,11 +3,17 @@ import cv2 as cv
 import numpy as np
 import math
 
-lowerThreshold = 100
-upperThreshold = 200
+# Most of these values were fine tuned based on testing images
+cannyLowerThreshold = 100
+cannyUpperThreshold = 200
 
-# This function is for detecting the clock's outer circumference using Hough Transform
-# Recieves image as input and returns the same image cropped around the circle
+houghLinesThreshold = 90
+houghLinesMinLineLength = 5
+houghLinesMaxLineGap = 10
+
+# Detects the clock's outer circumference using Hough Transform
+# Returns the image cropped around the circle representing the clock's face
+# The center of the clock will be the center of the image
 def isolateClock(clockImg):
     # Convert the image to grayscale and blur
     gray = cv.cvtColor(clockImg, cv.COLOR_BGR2GRAY)
@@ -23,51 +29,92 @@ def isolateClock(clockImg):
     r = circles[0][0][2]
     return gray[(y-r):(y+r), (x-r):(x+r)]
 
+# Returns three lines representing the hour, minute, and second hands (ie. [hour, minute, second])
+# TODO: Support not having a second hand
 def detectClockHands(clockImg):
-    edges = cv.Canny(clockImg, lowerThreshold, upperThreshold)
+    # Convert image to colour so coloured lines can be displayed
+    clockImg = cv.cvtColor(clockImg, cv.COLOR_GRAY2BGR)
 
-    lines = cv.HoughLines(edges, 1, np.pi / 180, 100)
+    # Extract edges from image
+    edges = cv.Canny(clockImg, cannyLowerThreshold, cannyUpperThreshold)
 
-    # Remove lines that do not pass through center (ie. are not clock hands)
     h = clockImg.shape[0]
     w = clockImg.shape[1]
     c = (h // 2, w // 2)
+    r = h // 30
 
-    # Center radius that clock hands should pass through
-    r = 10
+    # Detect lines in image
+    lines = cv.HoughLinesP(edges, 1, np.pi / 180, houghLinesThreshold, None, houghLinesMinLineLength, houghLinesMaxLineGap)
 
-    # Source: https://docs.opencv.org/3.4/d9/db0/tutorial_hough_lines.html
+    # Append goodLines with lines that pass through a radius around the center specified by r
+    # This ensures lines which do not represent clock hands are ignored
     goodLines = []
     for line in lines:
-        rho = line[0][0]
-        theta = line[0][1]
-
-        a = np.cos(theta)
-        b = np.sin(theta)
-        x0 = a * rho
-        y0 = b * rho
-        x1 = int(x0 + w * b * -1)
-        y1 = int(y0 + h * a)
-        x2 = int(x0 - w * b * -1)
-        y2 = int(y0 - h * a)
-
-        # Add line to goodLines if it falls within the center's radius
-        # Source: https://math.stackexchange.com/questions/275529/check-if-line-intersects-with-circles-perimeter
+        x1, y1, x2, y2 = line[0]
         d = abs(((x2 - x1) * c[0]) + ((y1 - y2) * c[1]) + ((x1 - x2) * y1) + ((y2 - y1) * x1)) / math.sqrt(math.pow((x2 - x1), 2) + math.pow((y1 - y2), 2))
         if d <= r:
             goodLines.append(line)
-            cv.line(clockImg, (x1, y1), (x2, y2), (0, 0, 255), 2)
 
-    return clockImg
+    # Merge nearby lines together, otherwise each clock hand will have two lines (one on each edge)
+    # The new merged line will be located at the midpoint between the two lines
+    # mergedLines are of the form (x1, y1, x2, y2, t) where t is the thickness of the line
+    mergedLines = []
+    d = h // 30
+    for i in range(0, len(goodLines)):
+        for j in range(i + 1, len(goodLines)):
+            ix1, iy1, ix2, iy2 = goodLines[i][0]
+            jx1, jy1, jx2, jy2 = goodLines[j][0]
+            if (abs(ix1 - jx1) < d and abs(iy1 - jy1) < d and abs(ix2 - jx2) < d and abs(iy2 - jy2) < d):
+                t = math.sqrt((jx1 - ix1)**2 + (jy1 - iy1)**2)
+                mergedLines.append([(ix1 + jx1) // 2, (iy1 + jy1) // 2, (ix2 + jx2) // 2, (iy2 + jy2) // 2, t])
+    
+    # Sort mergedLines by thickness
+    mergedLines.sort(key=lambda x:x[4], reverse=True)
+    print("mergedLines: ", mergedLines)
+    print("NOTE: This list should only ever have 2 or 3 values")
 
-# Calling the hough detection function
+    # Remove the thickness value for each, don't need it at this point
+    for line in mergedLines:
+        line.pop()
+
+    # The two thickest lines are the hour and minute hand, the shorter of which is the hour hand
+    # The remaining line is therefore the second hand
+    clockHands = []
+    line1Length = math.sqrt((mergedLines[0][2] - mergedLines[0][0])**2 + (mergedLines[0][3] - mergedLines[0][1])**2)
+    line2Length = math.sqrt((mergedLines[1][2] - mergedLines[1][0])**2 + (mergedLines[1][3] - mergedLines[1][1])**2)
+
+    if (line1Length < line2Length):
+        clockHands.append(mergedLines[0])
+        clockHands.append(mergedLines[1])
+    else:
+        clockHands.append(mergedLines[1])
+        clockHands.append(mergedLines[0])
+    
+    clockHands.append(mergedLines[2])
+
+    # DISPLAY FOR TESTING PURPOSES
+    # Print hour in red, minute in blue, second in green
+    cv.line(clockImg, (clockHands[0][0], clockHands[0][1]), (clockHands[0][2], clockHands[0][3]), (0, 0, 255), 2)
+    cv.line(clockImg, (clockHands[1][0], clockHands[1][1]), (clockHands[1][2], clockHands[1][3]), (255, 0, 0), 2)
+    cv.line(clockImg, (clockHands[2][0], clockHands[2][1]), (clockHands[2][2], clockHands[2][3]), (0, 255, 0), 2)
+    cv.imshow("Hour (red), minute (blue), second (green)", clockImg)
+    cv.waitKey(0)
+    cv.destroyAllWindows()
+
+    return clockHands
+
+# Calculate time by determining the angles of the lines
+# clockHands[0] - hour hand
+# clockHands[1] - minute hand
+# clockHands[2] - second hand (optional)
+def calculateTime(clockHands):
+    print('clockHands: ', clockHands)
+    return "HH:MM:SS"
+
 # Passes image file into the function through the command line arguments
-# FOR TESTING PURPOSES ONLY, TO BE REMOVED LATER
 clockImg = cv.imread("images/" + sys.argv[1])
 isolatedImg = isolateClock(clockImg)
-hands = detectClockHands(isolatedImg)
-
-cv.imshow("Circle Detection", hands)
-cv.waitKey(0)
-cv.destroyAllWindows()
+clockHands = detectClockHands(isolatedImg)
+time = calculateTime(clockHands)
+print(time)
 
