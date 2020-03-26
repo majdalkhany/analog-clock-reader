@@ -11,6 +11,12 @@ houghLinesThreshold = 90
 houghLinesMinLineLength = 5
 houghLinesMaxLineGap = 10
 
+# Determines angle given four points (x1, y1, x2, y2)
+def calculateAngle(x1, y1, x2, y2):
+    xd = x2 - x1
+    yd = y2 - y1
+    return math.degrees(math.atan2(yd, xd))
+
 # Detects the clock's outer circumference using Hough Transform
 # Returns the image cropped around the circle representing the clock's face
 # The center of the clock will be the center of the image
@@ -30,7 +36,6 @@ def isolateClock(clockImg):
     return gray[(y-r):(y+r), (x-r):(x+r)]
 
 # Returns three lines representing the hour, minute, and second hands (ie. [hour, minute, second])
-# TODO: Support not having a second hand
 def detectClockHands(clockImg):
     # Convert image to colour so coloured lines can be displayed
     clockImg = cv.cvtColor(clockImg, cv.COLOR_GRAY2BGR)
@@ -55,18 +60,50 @@ def detectClockHands(clockImg):
         if d <= r:
             goodLines.append(line)
 
+    # FOR TESTING PURPOSES ONLY
+    clockImgCopy = clockImg.copy()
+    for line in goodLines:
+        for x1, y1, x2, y2 in line:
+            cv.line(clockImgCopy, (x1, y1), (x2, y2), (0, 255, 0), 2)
+    cv.imshow("Filtered lines", clockImgCopy)
+    cv.waitKey(0)
+    cv.destroyAllWindows()
+
     # Merge nearby lines together, otherwise each clock hand will have two lines (one on each edge)
     # The new merged line will be located at the midpoint between the two lines
-    # mergedLines are of the form (x1, y1, x2, y2, t) where t is the thickness of the line
+    # mergedLines are of the form (x1, y1, x2, y2, t, a) where t is the thickness of the line and a is its angle
     mergedLines = []
-    d = h // 30
+    hasBeenMerged = []
+    maxThetaDiff = 3
     for i in range(0, len(goodLines)):
         for j in range(i + 1, len(goodLines)):
             ix1, iy1, ix2, iy2 = goodLines[i][0]
             jx1, jy1, jx2, jy2 = goodLines[j][0]
-            if (abs(ix1 - jx1) < d and abs(iy1 - jy1) < d and abs(ix2 - jx2) < d and abs(iy2 - jy2) < d):
-                t = math.sqrt((jx1 - ix1)**2 + (jy1 - iy1)**2)
-                mergedLines.append([(ix1 + jx1) // 2, (iy1 + jy1) // 2, (ix2 + jx2) // 2, (iy2 + jy2) // 2, t])
+
+            # Merge lines together if their angles are similar
+            iTheta = calculateAngle(ix1, iy1, ix2, iy2)
+            jTheta = calculateAngle(jx1, jy1, jx2, jy2)
+
+            if (abs(iTheta - jTheta) <= maxThetaDiff):
+                # To determine thickness, calculate distance from midpoint of one line to the closest point on the other line
+                # Cannot just compare the endpoints since they may not line up
+                midx = (ix2 + ix1) // 2
+                midy = (iy2 + iy1) // 2
+                p1 = np.array([jx1, jy1])
+                p2 = np.array([jx2, jy2])
+                p3 = np.array([midx, midy])
+                t = np.linalg.norm(np.cross(p2 - p1, p1 - p3)) / np.linalg.norm(p2 - p1)
+                a = calculateAngle((ix1 + jx1) // 2, (iy1 + jy1) // 2, (ix2 + jx2) // 2, (iy2 + jy2) // 2)
+
+                # Exclude this line if its angle is too similar to an existing line
+                addLine = True
+                for line in mergedLines:
+                    if abs(a - line[5]) < maxThetaDiff:
+                        addLine = False
+                        break
+
+                if (addLine):
+                    mergedLines.append([(ix1 + jx1) // 2, (iy1 + jy1) // 2, (ix2 + jx2) // 2, (iy2 + jy2) // 2, t, a])
 
     # Sort mergedLines by thickness
     mergedLines.sort(key=lambda x:x[4], reverse=True)
@@ -90,13 +127,19 @@ def detectClockHands(clockImg):
         clockHands.append(mergedLines[1])
         clockHands.append(mergedLines[0])
 
-    clockHands.append(mergedLines[2])
+    # Add second hand only if it exists
+    if (len(mergedLines) > 2):
+        clockHands.append(mergedLines[2])
 
     # DISPLAY FOR TESTING PURPOSES
     # Print hour in red, minute in blue, second in green
     cv.line(clockImg, (clockHands[0][0], clockHands[0][1]), (clockHands[0][2], clockHands[0][3]), (0, 0, 255), 2)
     cv.line(clockImg, (clockHands[1][0], clockHands[1][1]), (clockHands[1][2], clockHands[1][3]), (255, 0, 0), 2)
-    cv.line(clockImg, (clockHands[2][0], clockHands[2][1]), (clockHands[2][2], clockHands[2][3]), (0, 255, 0), 2)
+
+    # Display second hand only if it exists
+    if (len(clockHands) > 2):
+        cv.line(clockImg, (clockHands[2][0], clockHands[2][1]), (clockHands[2][2], clockHands[2][3]), (0, 255, 0), 2)
+
     cv.imshow("Hour (red), minute (blue), second (green)", clockImg)
     cv.waitKey(0)
     cv.destroyAllWindows()
