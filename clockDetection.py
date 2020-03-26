@@ -11,7 +11,8 @@ houghLinesThreshold = 90
 houghLinesMinLineLength = 5
 houghLinesMaxLineGap = 10
 
-# Determines angle given four points (x1, y1, x2, y2)
+# Determines angle given four points (x1, y1, x2, y2) using math.atan2
+# Returns the value in radians, so the result needs to be converted to degrees
 def calculateAngle(x1, y1, x2, y2):
     xd = x2 - x1
     yd = y2 - y1
@@ -152,29 +153,30 @@ def detectClockHands(clockImg):
 # clockHands[2] - second hand (optional)
 def calculateTime(clockHands):
     print('clockHands: ', clockHands)
-    #Calculate the angles of each hand using the math.atan2 function.
-    #atan2 returns the function in radians, so the result will be converted to
-    #degrees using the math.degrees method.
-    hourAngle = math.degrees(math.atan2(clockHands[0][3]-clockHands[0][1],clockHands[0][2]-clockHands[0][0]))
-    minuteAngle = math.degrees(math.atan2(clockHands[1][3]-clockHands[1][1],clockHands[1][2]-clockHands[1][0]))
-    secondAngle = math.degrees(math.atan2(clockHands[2][3]-clockHands[2][1],clockHands[2][2]-clockHands[2][0]))
+    hasSeconds = len(clockHands) > 2
+
+    hourAngle = calculateAngle(clockHands[0][0], clockHands[0][1], clockHands[0][2], clockHands[0][3])
+    minuteAngle = calculateAngle(clockHands[1][0], clockHands[1][1], clockHands[1][2], clockHands[1][3])
+    secondAngle = calculateAngle(clockHands[2][0], clockHands[2][1], clockHands[2][2], clockHands[2][3]) if hasSeconds else None
 
     #FOR DEBUGGING PURPOSES ONLY, DELETE LATER
-    print(hourAngle)
-    print(minuteAngle)
-    print(secondAngle)
+    print("Hour angle: ", hourAngle)
+    print("Minute angle: ", minuteAngle)
+    print("Second angle: ", secondAngle)
 
     #Calculate the hours, minutes, and seconds from the angles of the clock hands
     hoursCalculated = ((hourAngle//30)+3)%12
     minutesCalculated = (math.floor(((minuteAngle/30)*5)+15))%60
-    secondsCalculated = (math.ceil(((secondAngle/30)*5)+15))%60
+    secondsCalculated = (math.ceil(((secondAngle/30)*5)+15))%60 if hasSeconds else None
 
     #FOR DEBUGGING PURPOSES ONLY
     print("Hours: ", hoursCalculated)
     print("Minutes: ", minutesCalculated,((minuteAngle/30))*5)
-    print("Seconds: ",secondsCalculated,((secondAngle/30))*5)
 
-    timeTotal = str(hoursCalculated),":",str(minutesCalculated),":",str(secondsCalculated)
+    if (hasSeconds): print("Seconds: ", secondsCalculated,((secondAngle/30))*5)
+    else: print("Seconds: NA")
+
+    timeTotal = str(hoursCalculated),":",str(minutesCalculated),":",str(secondsCalculated) if hasSeconds else str(hoursCalculated),":",str(minutesCalculated)
 
     return timeTotal
 
