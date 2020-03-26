@@ -14,9 +14,7 @@ houghLinesMaxLineGap = 10
 # Determines angle given four points (x1, y1, x2, y2) using math.atan2
 # Returns the value in radians, so the result needs to be converted to degrees
 def calculateAngle(x1, y1, x2, y2):
-    xd = x2 - x1
-    yd = y2 - y1
-    return math.degrees(math.atan2(yd, xd))
+    return math.degrees(math.atan2(y2 - y1, x2 - x1))
 
 # Detects the clock's outer circumference using Hough Transform
 # Returns the image cropped around the circle representing the clock's face
@@ -111,6 +109,8 @@ def detectClockHands(clockImg):
     print("mergedLines: ", mergedLines)
     print("NOTE: This list should only ever have 2 or 3 values")
 
+    hasSeconds = len(mergedLines) > 2
+
     # Remove the thickness value for each, don't need it at this point
     for line in mergedLines:
         line.pop()
@@ -129,7 +129,7 @@ def detectClockHands(clockImg):
         clockHands.append(mergedLines[0])
 
     # Add second hand only if it exists
-    if (len(mergedLines) > 2):
+    if (hasSeconds):
         clockHands.append(mergedLines[2])
 
     # DISPLAY FOR TESTING PURPOSES
@@ -138,7 +138,7 @@ def detectClockHands(clockImg):
     cv.line(clockImg, (clockHands[1][0], clockHands[1][1]), (clockHands[1][2], clockHands[1][3]), (255, 0, 0), 2)
 
     # Display second hand only if it exists
-    if (len(clockHands) > 2):
+    if (hasSeconds):
         cv.line(clockImg, (clockHands[2][0], clockHands[2][1]), (clockHands[2][2], clockHands[2][3]), (0, 255, 0), 2)
 
     cv.imshow("Hour (red), minute (blue), second (green)", clockImg)
