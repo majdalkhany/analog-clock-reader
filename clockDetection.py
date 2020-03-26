@@ -22,7 +22,7 @@ def isolateClock(clockImg):
     # Apply Hough Circle Transform
     circles = cv.HoughCircles(img, cv.HOUGH_GRADIENT, 1, 1000, param1=100, param2=30, minRadius=0, maxRadius=0)
     circles = np.uint16(np.around(circles))
-    
+
     # Crop image around circle
     x = circles[0][0][0]
     y = circles[0][0][1]
@@ -67,7 +67,7 @@ def detectClockHands(clockImg):
             if (abs(ix1 - jx1) < d and abs(iy1 - jy1) < d and abs(ix2 - jx2) < d and abs(iy2 - jy2) < d):
                 t = math.sqrt((jx1 - ix1)**2 + (jy1 - iy1)**2)
                 mergedLines.append([(ix1 + jx1) // 2, (iy1 + jy1) // 2, (ix2 + jx2) // 2, (iy2 + jy2) // 2, t])
-    
+
     # Sort mergedLines by thickness
     mergedLines.sort(key=lambda x:x[4], reverse=True)
     print("mergedLines: ", mergedLines)
@@ -89,7 +89,7 @@ def detectClockHands(clockImg):
     else:
         clockHands.append(mergedLines[1])
         clockHands.append(mergedLines[0])
-    
+
     clockHands.append(mergedLines[2])
 
     # DISPLAY FOR TESTING PURPOSES
@@ -109,7 +109,31 @@ def detectClockHands(clockImg):
 # clockHands[2] - second hand (optional)
 def calculateTime(clockHands):
     print('clockHands: ', clockHands)
-    return "HH:MM:SS"
+    #Calculate the angles of each hand using the math.atan2 function.
+    #atan2 returns the function in radians, so the result will be converted to
+    #degrees using the math.degrees method.
+    hourAngle = math.degrees(math.atan2(clockHands[0][3]-clockHands[0][1],clockHands[0][2]-clockHands[0][0]))
+    minuteAngle = math.degrees(math.atan2(clockHands[1][3]-clockHands[1][1],clockHands[1][2]-clockHands[1][0]))
+    secondAngle = math.degrees(math.atan2(clockHands[2][3]-clockHands[2][1],clockHands[2][2]-clockHands[2][0]))
+
+    #FOR DEBUGGING PURPOSES ONLY, DELETE LATER
+    print(hourAngle)
+    print(minuteAngle)
+    print(secondAngle)
+
+    #Calculate the hours, minutes, and seconds from the angles of the clock hands
+    hoursCalculated = ((hourAngle//30)+3)%12
+    minutesCalculated = (math.floor(((minuteAngle/30)*5)+15))%60
+    secondsCalculated = (math.ceil(((secondAngle/30)*5)+15))%60
+
+    #FOR DEBUGGING PURPOSES ONLY
+    print("Hours: ", hoursCalculated)
+    print("Minutes: ", minutesCalculated,((minuteAngle/30))*5)
+    print("Seconds: ",secondsCalculated,((secondAngle/30))*5)
+
+    timeTotal = str(hoursCalculated),":",str(minutesCalculated),":",str(secondsCalculated)
+
+    return timeTotal
 
 # Passes image file into the function through the command line arguments
 clockImg = cv.imread("images/" + sys.argv[1])
@@ -117,4 +141,3 @@ isolatedImg = isolateClock(clockImg)
 clockHands = detectClockHands(isolatedImg)
 time = calculateTime(clockHands)
 print(time)
-
