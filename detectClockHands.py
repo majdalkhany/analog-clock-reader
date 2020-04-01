@@ -21,7 +21,7 @@ def detectClockHands(clockImg):
     h = clockImg.shape[0]
     w = clockImg.shape[1]
     c = (h // 2, w // 2)
-    r = h // 30
+    r = h // 2
 
     # Detect lines in image
     lines = cv.HoughLinesP(edges, 1, np.pi / 180, houghLinesThreshold, None, houghLinesMinLineLength, houghLinesMaxLineGap)
