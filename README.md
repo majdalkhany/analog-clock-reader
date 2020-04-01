@@ -2,6 +2,15 @@ COMP 4102 Final Project: Analog Clock Reader
 Majd Al Khany - 100977501
 Layne Koftinow-Mikan - 101013563
 
+==========
+ RUNNING
+==========
+Command: python detectClock.py <image>
+Example: python detectClock.py clock1.jpg (images must be in the images folder)
+
+==========
+ PROPOSAL
+==========
 Summary
 The purpose of this project is to develop a computer vision system which scans an image of an analog clock, determines the time represented on it, and returns a string representation of the time in hours, minutes, and seconds. This will be accomplished by using edge detection to detect the clock’s hands and an OCR algorithm to detect the clock’s numbers. The algorithm will be designed to support clocks which are missing key values such as a seconds hand or numbers. Additionally, the algorithm will support clocks which are rotated by and/or viewed at some unknown angle.
 
