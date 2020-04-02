@@ -5,6 +5,7 @@ cannyLowerThreshold = 100
 cannyUpperThreshold = 200
 
 # Aligns an angled clock so it is a circle rather than an oval
+# TODO: Improve algorithm and handle case where no alignment is necessary
 def alignClock(clockImg):
     # Finding bounding rect and circle to warp into
     edges = cv.Canny(clockImg, cannyLowerThreshold, cannyUpperThreshold)

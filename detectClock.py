@@ -5,11 +5,13 @@ from calculateAngle import calculateAngle
 from calculateTime import calculateTime
 from detectClockHands import detectClockHands
 from isolateClock import isolateClock
+from orientClock import orientClock
 
 # Passes image file into the function through the command line arguments
 clockImg = cv.imread("images/" + sys.argv[1])
-unwarpedImg = alignClock(clockImg)
-isolatedImg = isolateClock(unwarpedImg)
+# alignedImg = alignClock(clockImg)
+isolatedImg = isolateClock(clockImg)
+orientedImg = orientClock(isolatedImg)
 clockHands = detectClockHands(isolatedImg)
 time = calculateTime(clockHands)
 print(time)
