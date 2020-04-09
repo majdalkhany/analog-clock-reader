@@ -16,7 +16,7 @@ def calculateTime(clockHands, clockImg):
     angles.append(calculateAngle(clockHands[2][0], clockHands[2][1], clockHands[2][2], clockHands[2][3]) if hasSeconds else None)
 
     # Flip angles if they are going in the opposite direction
-    # TODO: Logic might need to be tweaked, this just fixes the one case
+    # TODO: Logic might need to be tweaked, this just fixes a couple cases
     c = (clockImg.shape[0] // 2, clockImg.shape[1] // 2)
     for i in range(0, len(clockHands)):
         if (angles[i] == None): continue
@@ -27,10 +27,10 @@ def calculateTime(clockHands, clockImg):
         d1 = abs(calculateDistance(cx, cy, x1, y1))
         d2 = abs(calculateDistance(cy, cy, x2, y2))
 
-        if (d2 > d1 and angles[i] < 90 and angles[i] >= 0):
+        if (d2 > d1 and angles[i] < 180 and angles[i] >= 0):
             angles[i] = angles[i] - 180
         
-        if (d1 > d2 and angles[i] < 0 and angles[i] >= -90):
+        if (d1 > d2 and angles[i] < 0 and angles[i] >= -180):
             angles[i] = angles[i] - 180
 
     hourAngle, minuteAngle, secondAngle = angles

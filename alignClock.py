@@ -22,6 +22,10 @@ def alignClock(clockImg):
     if (x + w + 10 > cx + r and y + h + 10 > cy + r):
         return clockImg
 
+    # Also do not align if the boundingRect ratios are way off as this is probably a false positive
+    if (w < h / 2 or h < w / 2):
+        return clockImg
+
     # Draw original image outline, circle, and bounding rect for testing purposes
     if (globals.isDemo):
         drawImg = np.zeros_like(clockImg)

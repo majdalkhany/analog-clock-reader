@@ -28,8 +28,8 @@ testCases = [
     ["clock2_skew.jpg", "10:09:25"],
     ["clock3.jpg", "10:10:38"],
     ["clock4.jpg", "4:37:36"],
-    ["clock5.jpg", "10:09"]
-    # ["watch1.jpg", "10:10:34"]
+    ["clock5.jpg", "10:09"],
+    ["watch1.jpg", "10:09:33"]
 ]
 
 def testDetectClock():
