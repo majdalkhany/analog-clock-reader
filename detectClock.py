@@ -9,8 +9,8 @@ from orientClock import orientClock
 
 # Passes image file into the function through the command line arguments
 clockImg = cv.imread("images/" + sys.argv[1])
-# alignedImg = alignClock(clockImg)
-isolatedImg = isolateClock(clockImg)
+alignedImg = alignClock(clockImg)
+isolatedImg = isolateClock(alignedImg)
 orientedImg = orientClock(isolatedImg)
 clockHands = detectClockHands(isolatedImg)
 time = calculateTime(clockHands)
