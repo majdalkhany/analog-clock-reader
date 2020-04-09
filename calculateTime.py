@@ -27,9 +27,12 @@ def calculateTime(clockHands, clockImg):
         d1 = abs(calculateDistance(cx, cy, x1, y1))
         d2 = abs(calculateDistance(cy, cy, x2, y2))
 
-        if (d2 > d1 and angles[i] < 90) and angles[i] > 0:
+        if (d2 > d1 and angles[i] < 90 and angles[i] >= 0):
             angles[i] = angles[i] - 180
-    
+        
+        if (d1 > d2 and angles[i] < 0 and angles[i] >= -90):
+            angles[i] = angles[i] - 180
+
     hourAngle, minuteAngle, secondAngle = angles
 
     #FOR DEBUGGING PURPOSES ONLY, DELETE LATER
