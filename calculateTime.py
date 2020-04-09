@@ -57,5 +57,8 @@ def calculateTime(clockHands):
     if (hasSeconds): print("Seconds: ", secondsCalculated,((secondAngle/30))*5)
     else: print("Seconds: NA")
 
-    timeTotal = str(hoursCalculated),":",str(minutesCalculated),":",str(secondsCalculated) if hasSeconds else str(hoursCalculated),":",str(minutesCalculated)
+    hoursFormatted = str(int(hoursCalculated)) if hoursCalculated > 9 else "0" + str(int(hoursCalculated))
+    minutesFormatted = str(int(minutesCalculated)) if minutesCalculated > 9 else "0" + str(int(minutesCalculated))
+    secondsFormatted = str(int(secondsCalculated)) if secondsCalculated > 9 else "0" + str(int(secondsCalculated))
+    timeTotal = hoursFormatted + ":" + minutesFormatted + ":" + secondsFormatted if hasSeconds else ""
     return timeTotal
