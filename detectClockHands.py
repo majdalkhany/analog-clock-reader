@@ -85,8 +85,10 @@ def detectClockHands(clockImg):
 
     # Sort mergedLines by thickness
     mergedLines.sort(key=lambda x:x[4], reverse=True)
-    print("mergedLines: ", mergedLines)
-    print("NOTE: This list should only ever have 2 or 3 values")
+
+    if (demo.isDemo):
+        print("mergedLines: ", mergedLines)
+        print("NOTE: This list should only ever have 2 or 3 values")
 
     hasSeconds = len(mergedLines) > 2
 
