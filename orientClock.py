@@ -5,7 +5,6 @@ import time
 import cv2
 import pytesseract
 
-
 # TODO: Implement this (somehow)
 def orientClock(clockImg):
     return clockImg
@@ -33,7 +32,7 @@ def calculateScores(scoreMap, geometryMap):
 		for y in range(0, nColumns):
 			# if our score does not have sufficient probability,
 			# ignore it
-			if scoresData[y] < args["min_confidence"]:
+			if scoresData[y] < 0.5:
 				continue
 			# compute the offset factor as our resulting feature
 			# maps will be 4x smaller than the input image
@@ -59,3 +58,112 @@ def calculateScores(scoreMap, geometryMap):
 			confidences.append(scoresData[y])
 	# return a tuple of the bounding boxes and associated confidences
 	return (rects, confidences)
+
+
+
+#TEMPORARY: FOR TESTING PURPOSES ONLY,
+#To be deleted later
+ap = argparse.ArgumentParser()
+ap.add_argument("-i", "--image", type=str,
+	help="path to input image")
+args = vars(ap.parse_args())
+# load the input image and grab the image dimensions
+image = cv2.imread(args["image"])
+
+def detectHours(image):
+    orig = image.copy()
+
+    (origH, origW) = image.shape[:2]
+
+    # set the new width and height and then determine the ratio in change
+    # for both the width and height
+    rW = origW / float(320)
+    rH = origH / float(320)
+
+    # resize the image and grab the new image dimensions
+    image = cv2.resize(image, (320, 320))
+    (H, W) = image.shape[:2]
+
+
+    # load the pre-trained EAST text detector
+    print("[INFO] loading EAST text detector...")
+    net = cv2.dnn.readNet("frozen_east_text_detection.pb")
+
+    # construct a blob from the image and then perform a forward pass of
+    # the model to obtain the two output layer sets
+    blob = cv2.dnn.blobFromImage(image, 1.0, (W, H),
+    	(123.68, 116.78, 103.94), swapRB=True, crop=False)
+    net.setInput(blob)
+    (scores, geometry) = net.forward(["feature_fusion/Conv_7/Sigmoid","feature_fusion/concat_3"])
+
+    # decode the predictions, then  apply non-maxima suppression to
+    # suppress weak, overlapping bounding boxes
+    (rects, confidences) = calculateScores(scores, geometry)
+    boxes = non_max_suppression(np.array(rects), probs=confidences)
+
+    # initialize the list of results
+    results = []
+
+    # loop over the bounding boxes
+    for (startX, startY, endX, endY) in boxes:
+    	# scale the bounding box coordinates based on the respective
+    	# ratios
+    	startX = int(startX * rW)
+    	startY = int(startY * rH)
+    	endX = int(endX * rW)
+    	endY = int(endY * rH)
+
+    	# in order to obtain a better OCR of the text we can potentially
+    	# apply a bit of padding surrounding the bounding box -- here we
+    	# are computing the deltas in both the x and y directions
+    	dX = int((endX - startX) * 0.0)
+    	dY = int((endY - startY) * 0.0)
+
+    	# apply padding to each side of the bounding box, respectively
+    	startX = max(0, startX - dX)
+    	startY = max(0, startY - dY)
+    	endX = min(origW, endX + (dX * 2))
+    	endY = min(origH, endY + (dY * 2))
+
+    	# extract the actual padded ROI
+    	roi = orig[startY:endY, startX:endX]
+
+        	# in order to apply Tesseract v4 to OCR text we must supply
+    	# (1) a language, (2) an OEM flag of 4, indicating that the we
+    	# wish to use the LSTM neural net model for OCR, and finally
+    	# (3) an OEM value, in this case, 7 which implies that we are
+    	# treating the ROI as a single line of text
+    	config = ("-l eng --oem 1 --psm 7")
+    	text = pytesseract.image_to_string(roi, config=config)
+
+    	# add the bounding box coordinates and OCR'd text to the list
+    	# of results
+    	results.append(((startX, startY, endX, endY), text))
+
+    # sort the results bounding box coordinates from top to bottom
+    results = sorted(results, key=lambda r:r[0][1])
+
+    # loop over the results
+    for ((startX, startY, endX, endY), text) in results:
+    	# display the text OCR'd by Tesseract
+    	print("OCR TEXT")
+    	print("========")
+    	print("{}\n".format(text))
+
+    	# strip out non-ASCII text so we can draw the text on the image
+    	# using OpenCV, then draw the text and a bounding box surrounding
+    	# the text region of the input image
+    	text = "".join([c if ord(c) < 128 else "" for c in text]).strip()
+    	output = orig.copy()
+    	cv2.rectangle(output, (startX, startY), (endX, endY),
+    		(0, 0, 255), 2)
+    	cv2.putText(output, text, (startX, startY - 20),
+    		cv2.FONT_HERSHEY_SIMPLEX, 1.2, (0, 0, 255), 3)
+
+    	# show the output image
+    	cv2.imshow("Text Detection", output)
+    	cv2.waitKey(0)
+
+    return results
+
+print(detectHours(image))
