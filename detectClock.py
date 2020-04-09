@@ -1,6 +1,6 @@
 import sys
 import cv2 as cv
-import demo
+import globals
 from alignClock import alignClock
 from calculateTime import calculateTime
 from detectClockHands import detectClockHands
@@ -18,6 +18,6 @@ def detectClock(fileName):
     return time
 
 if __name__ == "__main__":
-    demo.isDemo = True
+    globals.isDemo = True
     time = detectClock(sys.argv[1])
     print("Time: " + time)

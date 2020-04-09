@@ -1,7 +1,7 @@
 import cv2 as cv
 import numpy as np
 import math
-import demo
+import globals
 from utils import calculateAngle
 from utils import calculateDistance
 
@@ -38,7 +38,7 @@ def detectClockHands(clockImg):
             goodLines.append(line)
 
     # FOR TESTING PURPOSES ONLY
-    if (demo.isDemo):
+    if (globals.isDemo):
         clockImgCopy = clockImg.copy()
         for line in goodLines:
             for x1, y1, x2, y2 in line:
@@ -86,7 +86,7 @@ def detectClockHands(clockImg):
     # Sort mergedLines by thickness
     mergedLines.sort(key=lambda x:x[4], reverse=True)
 
-    if (demo.isDemo):
+    if (globals.isDemo):
         print("mergedLines: ", mergedLines)
         print("NOTE: This list should only ever have 2 or 3 values")
 
@@ -116,7 +116,7 @@ def detectClockHands(clockImg):
 
     # DISPLAY FOR TESTING PURPOSES
     # Print hour in red, minute in blue, second in green
-    if (demo.isDemo):
+    if (globals.isDemo):
         cv.line(clockImg, (clockHands[0][0], clockHands[0][1]), (clockHands[0][2], clockHands[0][3]), (0, 0, 255), 2)
         cv.line(clockImg, (clockHands[1][0], clockHands[1][1]), (clockHands[1][2], clockHands[1][3]), (255, 0, 0), 2)
 
