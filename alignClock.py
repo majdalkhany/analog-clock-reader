@@ -1,11 +1,11 @@
 import cv2 as cv
 import numpy as np
+import globals
 
-cannyLowerThreshold = 100
+cannyLowerThreshold = 50
 cannyUpperThreshold = 200
 
 # Aligns an angled clock so it is a circle rather than an oval
-# TODO: Improve algorithm and handle case where no alignment is necessary
 def alignClock(clockImg):
     # Finding bounding rect and circle to warp into
     edges = cv.Canny(clockImg, cannyLowerThreshold, cannyUpperThreshold)
@@ -18,14 +18,23 @@ def alignClock(clockImg):
     cy = int(c[1])
     r = int(r)
 
+    # If the boundingRect is roughly the same size as the minEnclosingCircle, alignment is unnecessary
+    if (x + w + 10 > cx + r and y + h + 10 > cy + r):
+        return clockImg
+
+    # Also do not align if the boundingRect ratios are way off as this is probably a false positive
+    if (w < h / 2 or h < w / 2):
+        return clockImg
+
     # Draw original image outline, circle, and bounding rect for testing purposes
-    drawImg = np.zeros_like(clockImg)
-    cv.drawContours(drawImg, contours, 0, (255, 255, 255), cv.FILLED, 8, hierarchy)
-    cv.circle(drawImg, (cx, cy), r, (0, 255, 0), 2)
-    cv.rectangle(drawImg, (x, y), (x + w, y + h), (0, 0, 255), 2)
-    cv.imshow("Bounding rectangle (red), circle to warp to (green)", drawImg)
-    cv.waitKey(0)
-    cv.destroyAllWindows()
+    if (globals.isDemo):
+        drawImg = np.zeros_like(clockImg)
+        cv.drawContours(drawImg, contours, 0, (255, 255, 255), cv.FILLED, 8, hierarchy)
+        cv.circle(drawImg, (cx, cy), r, (0, 255, 0), 2)
+        cv.rectangle(drawImg, (x, y), (x + w, y + h), (0, 0, 255), 2)
+        cv.imshow("Bounding rectangle (red), circle to warp to (green)", drawImg)
+        cv.waitKey(0)
+        cv.destroyAllWindows()
 
     # Apply perspective transform
     srcPoints = np.array([(x, y), (x + w, y), (x, y + h), (x + w, y + h)], np.float32)
@@ -33,8 +42,9 @@ def alignClock(clockImg):
     transMatrix = cv.getPerspectiveTransform(srcPoints, dstPoints)
     warpedImg = cv.warpPerspective(clockImg, transMatrix, (clockImg.shape[1], clockImg.shape[0]))
 
-    cv.imshow("Warped image", warpedImg)
-    cv.waitKey(0)
-    cv.destroyAllWindows()
+    if (globals.isDemo):
+        cv.imshow("Warped image", warpedImg)
+        cv.waitKey(0)
+        cv.destroyAllWindows()
 
     return warpedImg

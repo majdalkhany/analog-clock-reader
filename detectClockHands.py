@@ -1,7 +1,9 @@
 import cv2 as cv
 import numpy as np
 import math
-from calculateAngle import calculateAngle
+import globals
+from utils import calculateAngle
+from utils import calculateDistance
 
 # Most of these values were fine tuned based on testing images
 cannyLowerThreshold = 100
@@ -21,7 +23,7 @@ def detectClockHands(clockImg):
     h = clockImg.shape[0]
     w = clockImg.shape[1]
     c = (h // 2, w // 2)
-    r = h // 2
+    r = h // 4
 
     # Detect lines in image
     lines = cv.HoughLinesP(edges, 1, np.pi / 180, houghLinesThreshold, None, houghLinesMinLineLength, houghLinesMaxLineGap)
@@ -36,13 +38,14 @@ def detectClockHands(clockImg):
             goodLines.append(line)
 
     # FOR TESTING PURPOSES ONLY
-    clockImgCopy = clockImg.copy()
-    for line in goodLines:
-        for x1, y1, x2, y2 in line:
-            cv.line(clockImgCopy, (x1, y1), (x2, y2), (0, 255, 0), 2)
-    cv.imshow("Filtered lines", clockImgCopy)
-    cv.waitKey(0)
-    cv.destroyAllWindows()
+    if (globals.isDemo):
+        clockImgCopy = clockImg.copy()
+        for line in goodLines:
+            for x1, y1, x2, y2 in line:
+                cv.line(clockImgCopy, (x1, y1), (x2, y2), (0, 255, 0), 2)
+        cv.imshow("Filtered lines", clockImgCopy)
+        cv.waitKey(0)
+        cv.destroyAllWindows()
 
     # Merge nearby lines together, otherwise each clock hand will have two lines (one on each edge)
     # The new merged line will be located at the midpoint between the two lines
@@ -82,13 +85,16 @@ def detectClockHands(clockImg):
 
     # Sort mergedLines by thickness
     mergedLines.sort(key=lambda x:x[4], reverse=True)
-    print("mergedLines: ", mergedLines)
-    print("NOTE: This list should only ever have 2 or 3 values")
+
+    if (globals.isDemo):
+        print("mergedLines: ", mergedLines)
+        print("NOTE: This list should only ever have 2 or 3 values")
 
     hasSeconds = len(mergedLines) > 2
 
-    # Remove the thickness value for each, don't need it at this point
+    # Remove the thickness and angle value for each, don't need it at this point
     for line in mergedLines:
+        line.pop()
         line.pop()
 
     # The two thickest lines are the hour and minute hand, the shorter of which is the hour hand
@@ -110,15 +116,16 @@ def detectClockHands(clockImg):
 
     # DISPLAY FOR TESTING PURPOSES
     # Print hour in red, minute in blue, second in green
-    cv.line(clockImg, (clockHands[0][0], clockHands[0][1]), (clockHands[0][2], clockHands[0][3]), (0, 0, 255), 2)
-    cv.line(clockImg, (clockHands[1][0], clockHands[1][1]), (clockHands[1][2], clockHands[1][3]), (255, 0, 0), 2)
+    if (globals.isDemo):
+        cv.line(clockImg, (clockHands[0][0], clockHands[0][1]), (clockHands[0][2], clockHands[0][3]), (0, 0, 255), 2)
+        cv.line(clockImg, (clockHands[1][0], clockHands[1][1]), (clockHands[1][2], clockHands[1][3]), (255, 0, 0), 2)
 
-    # Display second hand only if it exists
-    if (hasSeconds):
-        cv.line(clockImg, (clockHands[2][0], clockHands[2][1]), (clockHands[2][2], clockHands[2][3]), (0, 255, 0), 2)
+        # Display second hand only if it exists
+        if (hasSeconds):
+            cv.line(clockImg, (clockHands[2][0], clockHands[2][1]), (clockHands[2][2], clockHands[2][3]), (0, 255, 0), 2)
 
-    cv.imshow("Hour (red), minute (blue), second (green)", clockImg)
-    cv.waitKey(0)
-    cv.destroyAllWindows()
+        cv.imshow("Hour (red), minute (blue), second (green)", clockImg)
+        cv.waitKey(0)
+        cv.destroyAllWindows()
 
     return clockHands
