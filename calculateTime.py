@@ -16,7 +16,7 @@ def calculateTime(clockHands, clockImg):
     angles.append(calculateAngle(clockHands[2][0], clockHands[2][1], clockHands[2][2], clockHands[2][3]) if hasSeconds else None)
 
     # Flip angles if they are going in the opposite direction
-    # TODO: Logic might need to be tweaked, this just fixes a couple cases
+    # TODO: Still having issues with clock2_skew and watch1, need to account for all cases
     c = (clockImg.shape[0] // 2, clockImg.shape[1] // 2)
     for i in range(0, len(clockHands)):
         if (angles[i] == None): continue
