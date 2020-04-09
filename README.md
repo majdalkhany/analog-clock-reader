@@ -7,6 +7,7 @@ Layne Koftinow-Mikan - 101013563
 ==========
 Command: python detectClock.py <image>
 Example: python detectClock.py clock1.jpg (images must be in the images folder)
+Running tets: python testDetectClock.py
 
 ==========
  PROPOSAL

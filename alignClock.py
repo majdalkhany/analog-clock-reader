@@ -1,5 +1,6 @@
 import cv2 as cv
 import numpy as np
+import demo
 
 cannyLowerThreshold = 100
 cannyUpperThreshold = 200
@@ -22,13 +23,14 @@ def alignClock(clockImg):
         return clockImg
 
     # Draw original image outline, circle, and bounding rect for testing purposes
-    drawImg = np.zeros_like(clockImg)
-    cv.drawContours(drawImg, contours, 0, (255, 255, 255), cv.FILLED, 8, hierarchy)
-    cv.circle(drawImg, (cx, cy), r, (0, 255, 0), 2)
-    cv.rectangle(drawImg, (x, y), (x + w, y + h), (0, 0, 255), 2)
-    cv.imshow("Bounding rectangle (red), circle to warp to (green)", drawImg)
-    cv.waitKey(0)
-    cv.destroyAllWindows()
+    if (demo.isDemo):
+        drawImg = np.zeros_like(clockImg)
+        cv.drawContours(drawImg, contours, 0, (255, 255, 255), cv.FILLED, 8, hierarchy)
+        cv.circle(drawImg, (cx, cy), r, (0, 255, 0), 2)
+        cv.rectangle(drawImg, (x, y), (x + w, y + h), (0, 0, 255), 2)
+        cv.imshow("Bounding rectangle (red), circle to warp to (green)", drawImg)
+        cv.waitKey(0)
+        cv.destroyAllWindows()
 
     # Apply perspective transform
     srcPoints = np.array([(x, y), (x + w, y), (x, y + h), (x + w, y + h)], np.float32)
@@ -36,8 +38,9 @@ def alignClock(clockImg):
     transMatrix = cv.getPerspectiveTransform(srcPoints, dstPoints)
     warpedImg = cv.warpPerspective(clockImg, transMatrix, (clockImg.shape[1], clockImg.shape[0]))
 
-    cv.imshow("Warped image", warpedImg)
-    cv.waitKey(0)
-    cv.destroyAllWindows()
+    if (demo.isDemo):
+        cv.imshow("Warped image", warpedImg)
+        cv.waitKey(0)
+        cv.destroyAllWindows()
 
     return warpedImg
