@@ -3,8 +3,13 @@ from detectClock import detectClock
 
 # Converts HH:MM:SS format to int value of seconds only
 def calculateSeconds(time):
-    h, m, s = time.split(":")
-    return (int(h) * 60 * 60) + (int(m) * 60) + int(s)
+    times = time.split(":")
+    if (len(times) > 2): 
+        h, m, s = times
+        return (int(h) * 60 * 60) + (int(m) * 60) + int(s)
+    else:
+        h, m = times
+        return (int(h) * 60 * 60) + (int(m) * 60)
 
 def calculateDifference(time1, time2):
     return abs(calculateSeconds(time1) - calculateSeconds(time2))
@@ -20,8 +25,9 @@ testCases = [
     ["clock1.jpg", "3:07:03"],
     ["clock1_skew.jpg", "3:07:03"],
     ["clock2.jpg", "10:09:25"],
-    ["clock3.jpg", "10:10:38"]
-    # ["clock4.jpg", "10:09:38"],
+    ["clock3.jpg", "10:10:38"],
+    ["clock4.jpg", "4:37:36"],
+    ["clock5.jpg", "10:09"]
     # ["watch1.jpg", "10:10:34"]
 ]
 

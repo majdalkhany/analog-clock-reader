@@ -55,10 +55,11 @@ def calculateTime(clockHands, clockImg):
     elif (((clockHands[1][3]-clockHands[1][1])>=0) and ((clockHands[1][2]-clockHands[1][0])>=0)):
         minutesCalculated = (math.floor(((minuteAngle/30)*5)-15))%60
     #Second calculation
-    if (((clockHands[2][3]-clockHands[2][1])<=0) and ((clockHands[2][2]-clockHands[2][0])>=0)):
-        secondsCalculated = (math.ceil(((secondAngle/30)*5)+15))%60 if hasSeconds else None
-    elif (((clockHands[2][3]-clockHands[2][1])>=0) and ((clockHands[2][2]-clockHands[2][0])>=0)):
-        secondsCalculated = (math.ceil(((secondAngle/30)*5)-15))%60 if hasSeconds else None
+    if (hasSeconds):
+        if (((clockHands[2][3]-clockHands[2][1])<=0) and ((clockHands[2][2]-clockHands[2][0])>=0)):
+            secondsCalculated = (math.ceil(((secondAngle/30)*5)+15))%60
+        elif (((clockHands[2][3]-clockHands[2][1])>=0) and ((clockHands[2][2]-clockHands[2][0])>=0)):
+            secondsCalculated = (math.ceil(((secondAngle/30)*5)-15))%60
 
     #BACK-UP CODE, MIGHT BE DELETED LATER IF NOT NEEDED
     #    elif (((clockHands[0][3]-clockHands[0][1])>=0) and ((clockHands[0][2]-clockHands[0][0])<=0)):
@@ -74,6 +75,7 @@ def calculateTime(clockHands, clockImg):
 
     hoursFormatted = str(int(hoursCalculated))
     minutesFormatted = str(int(minutesCalculated)) if minutesCalculated > 9 else "0" + str(int(minutesCalculated))
-    secondsFormatted = str(int(secondsCalculated)) if secondsCalculated > 9 else "0" + str(int(secondsCalculated))
-    timeTotal = hoursFormatted + ":" + minutesFormatted + ":" + secondsFormatted if hasSeconds else ""
+    secondsFormatted = (str(int(secondsCalculated)) if secondsCalculated > 9 else "0" + str(int(secondsCalculated))) if hasSeconds else ""
+
+    timeTotal = hoursFormatted + ":" + minutesFormatted + ":" + secondsFormatted if hasSeconds else hoursFormatted + ":" + minutesFormatted
     return timeTotal
