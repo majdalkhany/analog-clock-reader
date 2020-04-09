@@ -1,6 +1,7 @@
 import math
 from detectClock import detectClock
 
+# Converts HH:MM:SS format to int value of seconds only
 def calculateSeconds(time):
     h, m, s = time.split(":")
     return (int(h) * 60 * 60) + (int(m) * 60) + int(s)
