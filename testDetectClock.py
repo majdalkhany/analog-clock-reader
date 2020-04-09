@@ -25,6 +25,7 @@ testCases = [
     ["clock1.jpg", "3:07:03"],
     ["clock1_skew.jpg", "3:07:03"],
     ["clock2.jpg", "10:09:25"],
+    ["clock2_skew.jpg", "10:09:25"],
     ["clock3.jpg", "10:10:38"],
     ["clock4.jpg", "4:37:36"],
     ["clock5.jpg", "10:09"]

@@ -2,7 +2,7 @@ import cv2 as cv
 import numpy as np
 import globals
 
-cannyLowerThreshold = 100
+cannyLowerThreshold = 50
 cannyUpperThreshold = 200
 
 # Aligns an angled clock so it is a circle rather than an oval
