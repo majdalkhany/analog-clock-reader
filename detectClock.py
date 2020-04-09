@@ -2,7 +2,6 @@ import sys
 import cv2 as cv
 import demo
 from alignClock import alignClock
-from calculateAngle import calculateAngle
 from calculateTime import calculateTime
 from detectClockHands import detectClockHands
 from isolateClock import isolateClock
@@ -15,7 +14,7 @@ def detectClock(fileName):
     isolatedImg = isolateClock(alignedImg)
     orientedImg = orientClock(isolatedImg)
     clockHands = detectClockHands(isolatedImg)
-    time = calculateTime(clockHands)
+    time = calculateTime(clockHands, orientedImg)
     return time
 
 if __name__ == "__main__":

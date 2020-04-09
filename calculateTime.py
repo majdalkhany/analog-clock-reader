@@ -1,25 +1,41 @@
 import math
-from calculateAngle import calculateAngle
+from utils import calculateAngle
+from utils import calculateDistance
 
 # Calculate time by determining the angles of the lines
 # clockHands[0] - hour hand
 # clockHands[1] - minute hand
 # clockHands[2] - second hand (optional)
-def calculateTime(clockHands):
-    print()
-    print()
-    print('clockHands: ', clockHands)
+def calculateTime(clockHands, clockImg):
+    print('\n\nclockHands: ', clockHands)
     hasSeconds = len(clockHands) > 2
 
-    hourAngle = calculateAngle(clockHands[0][0], clockHands[0][1], clockHands[0][2], clockHands[0][3])
-    minuteAngle = calculateAngle(clockHands[1][0], clockHands[1][1], clockHands[1][2], clockHands[1][3])
-    secondAngle = calculateAngle(clockHands[2][0], clockHands[2][1], clockHands[2][2], clockHands[2][3]) if hasSeconds else None
+    angles = []
+    angles.append(calculateAngle(clockHands[0][0], clockHands[0][1], clockHands[0][2], clockHands[0][3]))
+    angles.append(calculateAngle(clockHands[1][0], clockHands[1][1], clockHands[1][2], clockHands[1][3]))
+    angles.append(calculateAngle(clockHands[2][0], clockHands[2][1], clockHands[2][2], clockHands[2][3]) if hasSeconds else None)
+
+    # Flip angles if they are going in the opposite direction
+    # TODO: Logic might need to be tweaked, this just fixes the one case
+    c = (clockImg.shape[0] // 2, clockImg.shape[1] // 2)
+    for i in range(0, len(clockHands)):
+        if (angles[i] == None): continue
+
+        x1, y1, x2, y2 = clockHands[i]
+        cx = clockImg.shape[0] // 2
+        cy = clockImg.shape[1] // 2
+        d1 = abs(calculateDistance(cx, cy, x1, y1))
+        d2 = abs(calculateDistance(cy, cy, x2, y2))
+
+        if (d2 > d1 and angles[i] < 90) and angles[i] > 0:
+            angles[i] = angles[i] - 180
+    
+    hourAngle, minuteAngle, secondAngle = angles
 
     #FOR DEBUGGING PURPOSES ONLY, DELETE LATER
     print("Hour angle: ", hourAngle)
     print("Minute angle: ", minuteAngle)
     print("Second angle: ", secondAngle)
-
 
     #Calculate the time from the clock hand angles, by first checking which quadrant each
     #clock hand is in, then calculating the time the hands are pointing to, accordingly

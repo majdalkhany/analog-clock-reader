@@ -2,7 +2,8 @@ import cv2 as cv
 import numpy as np
 import math
 import demo
-from calculateAngle import calculateAngle
+from utils import calculateAngle
+from utils import calculateDistance
 
 # Most of these values were fine tuned based on testing images
 cannyLowerThreshold = 100
@@ -89,8 +90,9 @@ def detectClockHands(clockImg):
 
     hasSeconds = len(mergedLines) > 2
 
-    # Remove the thickness value for each, don't need it at this point
+    # Remove the thickness and angle value for each, don't need it at this point
     for line in mergedLines:
+        line.pop()
         line.pop()
 
     # The two thickest lines are the hour and minute hand, the shorter of which is the hour hand
