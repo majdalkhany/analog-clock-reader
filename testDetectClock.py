@@ -30,7 +30,8 @@ testCases = [
     ["clock4.jpg", "4:37:36"],
     ["clock5.jpg", "10:09"],
     ["clock6.jpg", "2:39:51"],
-    ["watch1.jpg", "10:09:33"]
+    ["watch1.jpg", "10:09:33"],
+    ["watch2.jpg", "10:09:36"]
 ]
 
 def testDetectClock():
