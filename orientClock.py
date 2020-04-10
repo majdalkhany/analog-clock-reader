@@ -166,4 +166,5 @@ def detectHours(image):
 
     return results
 
-print(detectHours(image))
+#commented out to allow main program to execute properly
+#print(detectHours(image))
