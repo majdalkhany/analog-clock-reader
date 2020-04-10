@@ -29,6 +29,7 @@ testCases = [
     ["clock3.jpg", "10:10:38"],
     ["clock4.jpg", "4:37:36"],
     ["clock5.jpg", "10:09"],
+    ["clock6.jpg", "2:39:51"],
     ["watch1.jpg", "10:09:33"]
 ]
 
@@ -38,9 +39,10 @@ def testDetectClock():
         image = testCases[i][0]
         expected = testCases[i][1]
         actual = detectClock(image)
-        diff = calculateDifference(expected, actual)
-        accuracy = calculateAccuracy(diff)
-        print('{:>5} {:>16} {:>16} {:>16} {:>16} {:>16}'.format(i + 1, image, expected, actual, diff, accuracy))
+        actualFormatted = actual if actual != None else "None"
+        diff = calculateDifference(expected, actual) if actual != None else "-"
+        accuracy = calculateAccuracy(diff) if actual != None else "0.00"
+        print('{:>5} {:>16} {:>16} {:>16} {:>16} {:>16}'.format(i + 1, image, expected, actualFormatted, diff, accuracy))
 
 if __name__ == "__main__":
     testDetectClock()

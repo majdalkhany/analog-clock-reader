@@ -25,8 +25,16 @@ def detectClockHands(clockImg):
     c = (h // 2, w // 2)
     r = h // 4
 
+    if (globals.isDemo):
+        cv.imshow("Canny edge detection", edges)
+        cv.waitKey(0)
+        cv.destroyAllWindows()
+
     # Detect lines in image
     lines = cv.HoughLinesP(edges, 1, np.pi / 180, houghLinesThreshold, None, houghLinesMinLineLength, houghLinesMaxLineGap)
+    if (lines is None):
+        if (globals.isDemo): print("detectClockHands.py - No lines detected")
+        return []
 
     # Append goodLines with lines that pass through a radius around the center specified by r
     # This ensures lines which do not represent clock hands are ignored

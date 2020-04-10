@@ -20,4 +20,8 @@ def detectClock(fileName):
 if __name__ == "__main__":
     globals.isDemo = True
     time = detectClock(sys.argv[1])
-    print("Time: " + time)
+
+    if (time == None):
+        print ("Failed to detect clock")
+    else:
+        print("Time: " + time)

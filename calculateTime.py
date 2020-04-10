@@ -8,6 +8,9 @@ from utils import calculateDistance
 # clockHands[1] - minute hand
 # clockHands[2] - second hand (optional)
 def calculateTime(clockHands, clockImg):
+    if (len(clockHands) < 2):
+        return None
+
     hasSeconds = len(clockHands) > 2
 
     angles = []
