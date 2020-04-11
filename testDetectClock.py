@@ -4,7 +4,7 @@ from detectClock import detectClock
 # Converts HH:MM:SS format to int value of seconds only
 def calculateSeconds(time):
     times = time.split(":")
-    if (len(times) > 2): 
+    if (len(times) > 2):
         h, m, s = times
         return (int(h) * 60 * 60) + (int(m) * 60) + int(s)
     else:
@@ -24,6 +24,8 @@ def calculateAccuracy(diff):
 testCases = [
     ["clock1.jpg", "3:07:03"],
     ["clock1_skew.jpg", "3:07:03"],
+    ["clock1_rotated.jpg", "3:07:03"],
+    ["clock7.jpg", "12:08:04"],
     ["clock2.jpg", "10:09:25"],
     ["clock2_skew.jpg", "10:09:25"],
     ["clock3.jpg", "10:10:38"],
