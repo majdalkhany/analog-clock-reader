@@ -16,25 +16,25 @@ args = vars(ap.parse_args())
 image = cv2.imread(args["image"])
 
 
-# TODO: Implement this (somehow)
 def orientClock(clockImg):
-    detectHours(clockImg)
-    return clockImg
+    fixedImageOrientation = fixClockOrientation(clockImg, clockImg, 0, 0)
+    return
 
-def fixClockOrientation(image, degree, degreeCounter):
+#this function gets the clock image, the degrees to rotate the image
+#and a degree counter. If it ends up rotating the image over 360 degrees
+#then it cancels whatever it did and returns the original image it received
+def fixClockOrientation(originalImage, image, degree, degreeCounter):
 	degreeCounter = degreeCounter+degree
 	if isOrientedCorrectly(image) == True:
 		print("image is now in correct orientation: ", degreeCounter, "degrees")
-		cv2.imshow("Correct Orientation", image)
-		cv2.waitKey(0)
 		return image
 	elif degreeCounter >=360:
 		print("the image is kept in its original orientation:")
-		cv2.imshow("Original Orientation", image)
+		return originalImage
 	else:
 		degreePlus = degree+2
 		rotatedImage = rotateImage(image,degreePlus)
-		fixClockOrientation(rotatedImage, degreePlus, degreeCounter)
+		fixClockOrientation(originalImage, rotatedImage, degreePlus, degreeCounter)
 
 #rotate the specified image by the specified degrees
 def rotateImage(image,degree):
@@ -55,13 +55,6 @@ def isOrientedCorrectly(image):
 		return True
 	else:
 		return False
-
-
-
-
-
-
-
 
 
 def calculateScores(scoreMap, geometryMap):
