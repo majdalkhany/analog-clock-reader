@@ -5,10 +5,63 @@ import time
 import cv2
 import pytesseract
 
+
+#TEMPORARY: FOR TESTING PURPOSES ONLY,
+#To be deleted later
+ap = argparse.ArgumentParser()
+ap.add_argument("-i", "--image", type=str,
+	help="path to input image")
+args = vars(ap.parse_args())
+# load the input image and grab the image dimensions
+image = cv2.imread(args["image"])
+
+
 # TODO: Implement this (somehow)
 def orientClock(clockImg):
     detectHours(clockImg)
     return clockImg
+
+def fixClockOrientation(image, degree, degreeCounter):
+	degreeCounter = degreeCounter+degree
+	if isOrientedCorrectly(image) == True:
+		print("image is now in correct orientation: ", degreeCounter, "degrees")
+		cv2.imshow("Correct Orientation", image)
+		cv2.waitKey(0)
+		return image
+	elif degreeCounter >=360:
+		print("the image is kept in its original orientation:")
+		cv2.imshow("Original Orientation", image)
+	else:
+		degreePlus = degree+2
+		rotatedImage = rotateImage(image,degreePlus)
+		fixClockOrientation(rotatedImage, degreePlus, degreeCounter)
+
+#rotate the specified image by the specified degrees
+def rotateImage(image,degree):
+	rotatedImg = imutils.rotate(image, degree)
+	return rotatedImg
+
+#pass the results array and check if it contains a number from 1 to 12
+def isOrientedCorrectly(image):
+	results = detectText(image)
+	detectedNumbers = 0
+	res = [lis[1] for lis in results]
+	print (res)
+	for hour in np.arange(1, 12, 1):
+		for x in res:
+			if x == str(hour):
+				detectedNumbers = detectedNumbers+1
+	if detectedNumbers >= 2:
+		return True
+	else:
+		return False
+
+
+
+
+
+
+
 
 
 def calculateScores(scoreMap, geometryMap):
@@ -78,7 +131,6 @@ def detectHours(image):
     image = cv2.resize(image, (320, 320))
     (H, W) = image.shape[:2]
 
-
     #Load the EAST text detector
     net = cv2.dnn.readNet("frozen_east_text_detection.pb")
 
@@ -136,3 +188,6 @@ def detectHours(image):
     # sort the results bounding box coordinates from top to bottom
     results = sorted(results, key=lambda r:r[0][1])
     return results
+
+
+print(detectHours(image))
