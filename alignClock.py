@@ -26,6 +26,8 @@ def alignClock(clockImg):
     if (w < h / 2 or h < w / 2):
         return clockImg
 
+    if (globals.isDemo): print("Aligning image...")
+
     # Draw original image outline, circle, and bounding rect for testing purposes
     if (globals.isDemo):
         drawImg = np.zeros_like(clockImg)

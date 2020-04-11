@@ -31,8 +31,8 @@ testCases = [
     ["clock4.jpg", "4:38:36"],
     ["clock5.jpg", "10:09"],
     ["clock6.jpg", "2:39:51"],
-    ["clock7.jpg", "12:08:04"],
-    ["clock7_rotated.jpg", "12:08:04"],
+    ["clock7.jpg", "10:10:35"],
+    ["clock7_rotated.jpg", "10:10:35"],
     ["watch1.jpg", "10:09:33"],
     ["watch2.jpg", "10:09:36"]
 ]

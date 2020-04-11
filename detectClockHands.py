@@ -13,6 +13,8 @@ houghLinesMaxLineGap = 25
 
 # Returns three lines representing the hour, minute, and second hands (ie. [hour, minute, second])
 def detectClockHands(clockImg):
+    if (globals.isDemo): print("Detecting clock hands...")
+
     # Convert image to colour so coloured lines can be displayed
     clockImg = cv.cvtColor(clockImg, cv.COLOR_GRAY2BGR)
 
@@ -44,7 +46,6 @@ def detectClockHands(clockImg):
         if d <= r:
             goodLines.append(line)
 
-    # FOR TESTING PURPOSES ONLY
     if (globals.isDemo):
         clockImgCopy = clockImg.copy()
         for line in goodLines:
@@ -92,10 +93,6 @@ def detectClockHands(clockImg):
 
     # Sort mergedLines by thickness
     mergedLines.sort(key=lambda x:x[4], reverse=True)
-
-    if (globals.isDemo):
-        print("mergedLines: ", mergedLines)
-        print("NOTE: This list should only ever have 2 or 3 values")
 
     hasSeconds = len(mergedLines) > 2
 

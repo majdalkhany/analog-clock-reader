@@ -8,14 +8,14 @@ import imutils
 import globals
 
 def orientClock(clockImg):
-    fixedImageOrientation = fixClockOrientation(clockImg, clockImg, 0)
-    return fixedImageOrientation
+	if (globals.isDemo): print("Orienting clock...")
+	return fixClockOrientation(clockImg, clockImg, 0)
 
 #this function gets the clock image, the degrees to rotate the image
 #and a degree counter. If it ends up rotating the image over 360 degrees
 #then it cancels whatever it did and returns the original image it received
 def fixClockOrientation(originalImage, image, degree):
-	if isOrientedCorrectly(image) == True:
+	if isOrientedCorrectly(image):
 		if (globals.isDemo):
 			if (degree == 0): print("Clock is kept in its original orientation.")
 			else: print("Clock is now in correct orientation: ", degree, "degrees")
@@ -43,10 +43,7 @@ def isOrientedCorrectly(image):
 		for x in res:
 			if (x == str(hour)) or (x == (str(hour)+"-")):
 				detectedNumbers = detectedNumbers+1
-	if detectedNumbers > 2:
-		return True
-	else:
-		return False
+	return detectedNumbers > 2
 
 def calculateScores(scoreMap, geometryMap):
 	#get the dimensions of scoreMap
@@ -166,5 +163,4 @@ def detectHours(image):
     	results.append(((startX, startY, endX, endY), text))
 
     # sort the results bounding box coordinates from top to bottom
-    results = sorted(results, key=lambda r:r[0][1])
-    return results
+    return sorted(results, key=lambda r:r[0][1])

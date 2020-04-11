@@ -8,6 +8,7 @@ from utils import calculateAngle
 # clockHands[2] - second hand (optional)
 # Each hand contains values [x1, y1, x2, y2]
 def calculateTime(clockHands, clockImg):
+    if (globals.isDemo): print("Calculating time...")
     if (len(clockHands) < 2): return None
 
     hasSeconds = len(clockHands) > 2
@@ -36,13 +37,9 @@ def calculateTime(clockHands, clockImg):
         print("Hour angle:", hourAngle)
         print("Minute angle:", minuteAngle)
         print("Second angle:", secondAngle)
-        print("Hours:", hoursCalculated)
-        print("Minutes:", minutesCalculated)
-        print("Seconds: ", secondsCalculated if hasSeconds else "None")
 
     hoursFormatted = str(int(hoursCalculated))
     minutesFormatted = str(int(minutesCalculated)) if minutesCalculated > 9 else "0" + str(int(minutesCalculated))
     secondsFormatted = (str(int(secondsCalculated)) if secondsCalculated > 9 else "0" + str(int(secondsCalculated))) if hasSeconds else ""
-
     timeTotal = hoursFormatted + ":" + minutesFormatted + ":" + secondsFormatted if hasSeconds else hoursFormatted + ":" + minutesFormatted
     return timeTotal
