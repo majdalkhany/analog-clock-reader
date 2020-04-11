@@ -1,3 +1,14 @@
+#OrientClock.py
+#This object is for the detection and correction of a clock image's orientation.
+#An image is passed into orientClock, and it checks for the image's orientation
+#by using character recognition. EAST text detection is used to detect text,
+#and pytesseract is used to figure out what the text actually is.
+#Since OCR doesn't work unless the text is in the correct orientation,
+#orientClock will be rotating the image and applying OCR until it can detect
+#the numbers on the clock, which would indicate that its correctly oriented.
+#In this case that the clock image is already in the correct orientation,
+#no work would be done and the image would be kept as-is.
+
 from imutils.object_detection import non_max_suppression
 import numpy as np
 import argparse
@@ -7,36 +18,51 @@ import pytesseract
 import imutils
 import globals
 
+#orientClock main method, which recieves the clock image and returns it in the
+#correct orientation, if it needs to be re-oriented at all
 def orientClock(clockImg):
 	if (globals.isDemo): print("Orienting clock...")
 	return fixClockOrientation(clockImg, clockImg, 0)
 
-#this function gets the clock image, the degrees to rotate the image
-#and a degree counter. If it ends up rotating the image over 360 degrees
-#then it cancels whatever it did and returns the original image it received
+#this function gets the original clock image (which it maintains without
+#modifying at all), the rotated clock image, and the degrees to rotate the
+#image. If it ends up rotating the image over 360 degrees then it cancels
+#whatever it did and returns the original image it received.
 def fixClockOrientation(originalImage, image, degree):
+    #if the image is in the correct orientation, don't do anything and return
+    #the original image received.
 	if isOrientedCorrectly(image):
 		if (globals.isDemo):
 			if (degree == 0): print("Clock is kept in its original orientation.")
 			else: print("Clock is now in correct orientation: ", degree, "degrees")
 		return image
+    #if the image has been rotated 360 degrees or more, then the number detection
+    #has failed for whatever reason and the original image will be returned.
 	elif degree >=360:
 		if (globals.isDemo): print("Failed to orient clock. Clock is kept in its original orientation.")
 		return originalImage
+    #in the case that the image is not oriented correctly and hasn't been rotated
+    #>=360 degrees, rotate it by an interval of 10 degrees and recursively
+    #check if its now in the correct orientation.
 	else:
 		degreePlus = degree+10
 		if (globals.isDemo): print("Rotating", degreePlus, "degrees...")
-		rotatedImage = rotateImage(originalImage,image,degreePlus)
+		rotatedImage = rotateImage(originalImage,degreePlus)
 		return fixClockOrientation(originalImage, rotatedImage, degreePlus)
 
 #rotate the specified image by the specified degrees
-def rotateImage(originalImage,image,degree):
+def rotateImage(originalImage,degree):
 	rotatedImg = imutils.rotate(originalImage, degree)
 	return rotatedImg
 
-#pass the results array and check if it contains a number from 1 to 12
+#pass the clock image and check if it contains numbers from 1 to 12.
+#numbers 6 and 9 are ignored because they are the usually interchangeable when
+#either are flipped, which could cause some problems.
 def isOrientedCorrectly(image):
+    #get the list of detected numbers from the image
 	results = detectHours(image)
+    #count how many elements are in that list, if they are more than 2 then
+    #the clock is in the correct orientation, otherwise its still rotated.
 	detectedNumbers = 0
 	res = [lis[1] for lis in results]
 	for hour in [1,2,3,4,5,7,8,10,11,12]:
@@ -94,6 +120,11 @@ def calculateScores(scoreMap, geometryMap):
 	# return a tuple of the bounding boxes and associated confidences
 	return (rects, confidences)
 
+
+#This is a function for applying the pytesseract OCR in order to detect
+#the numbers (hours) on the clock image. This will only read numbers that
+#are in the correct orientation, numbers that are upside down will
+#not be detected.
 def detectHours(image):
     orig = image.copy()
 
