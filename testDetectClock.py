@@ -44,7 +44,7 @@ def testDetectClock():
         expected = testCases[i][1]
 
         # Only perform orientClock step of algorithm if image is rotated
-        # The algorithm will work correctly of image is not rotated but doing so creates a bottleneck
+        # The algorithm will work correctly if image is not rotated but doing so creates a bottleneck
         actual = detectClock(image, skipOrientClock=(not "rotated" in image))
 
         actualFormatted = actual if actual != None else "None"
