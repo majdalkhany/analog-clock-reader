@@ -1,5 +1,5 @@
 import math
-from globals import isDemo
+import globals
 from utils import calculateAngle
 from utils import calculateDistance
 
@@ -39,7 +39,7 @@ def calculateTime(clockHands, clockImg):
     hourAngle, minuteAngle, secondAngle = angles
 
     #FOR DEBUGGING PURPOSES ONLY, DELETE LATER
-    if (isDemo):
+    if (globals.isDemo):
         print('\nclockHands: ', clockHands)
         print("Hour angle: ", hourAngle)
         print("Minute angle: ", minuteAngle)
@@ -70,7 +70,7 @@ def calculateTime(clockHands, clockImg):
     #    elif (((clockHands[0][3]-clockHands[0][1])<=0) and ((clockHands[0][2]-clockHands[0][0])<=0)):
     #        print ("case 4")
 
-    if (isDemo):
+    if (globals.isDemo):
         print("Hours: ", hoursCalculated)
         print("Minutes: ", minutesCalculated,((minuteAngle/30))*5)
         if (hasSeconds): print("Seconds: ", secondsCalculated,((secondAngle/30))*5)

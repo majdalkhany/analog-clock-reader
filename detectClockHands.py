@@ -1,7 +1,7 @@
 import cv2 as cv
 import numpy as np
 import math
-from globals import isDemo
+import globals
 from utils import calculateAngle
 from utils import calculateDistance
 
@@ -25,7 +25,7 @@ def detectClockHands(clockImg):
     c = (h // 2, w // 2)
     r = h // 4
 
-    if (isDemo):
+    if (globals.isDemo):
         cv.imshow("Canny edge detection", edges)
         cv.waitKey(0)
         cv.destroyAllWindows()
@@ -33,7 +33,7 @@ def detectClockHands(clockImg):
     # Detect lines in image
     lines = cv.HoughLinesP(edges, 1, np.pi / 180, houghLinesThreshold, None, houghLinesMinLineLength, houghLinesMaxLineGap)
     if (lines is None):
-        if (isDemo): print("detectClockHands.py - No lines detected")
+        if (globals.isDemo): print("detectClockHands.py - No lines detected")
         return []
 
     # Append goodLines with lines that pass through a radius around the center specified by r
@@ -46,7 +46,7 @@ def detectClockHands(clockImg):
             goodLines.append(line)
 
     # FOR TESTING PURPOSES ONLY
-    if (isDemo):
+    if (globals.isDemo):
         clockImgCopy = clockImg.copy()
         for line in goodLines:
             for x1, y1, x2, y2 in line:
@@ -94,7 +94,7 @@ def detectClockHands(clockImg):
     # Sort mergedLines by thickness
     mergedLines.sort(key=lambda x:x[4], reverse=True)
 
-    if (isDemo):
+    if (globals.isDemo):
         print("mergedLines: ", mergedLines)
         print("NOTE: This list should only ever have 2 or 3 values")
 
@@ -122,8 +122,9 @@ def detectClockHands(clockImg):
     if (hasSeconds):
         clockHands.append(mergedLines[2])
 
+    # DISPLAY FOR TESTING PURPOSES
     # Print hour in red, minute in blue, second in green
-    if (isDemo):
+    if (globals.isDemo):
         cv.line(clockImg, (clockHands[0][0], clockHands[0][1]), (clockHands[0][2], clockHands[0][3]), (0, 0, 255), 2)
         cv.line(clockImg, (clockHands[1][0], clockHands[1][1]), (clockHands[1][2], clockHands[1][3]), (255, 0, 0), 2)
 
