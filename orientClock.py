@@ -8,7 +8,7 @@ import imutils
 import globals
 
 def orientClock(clockImg):
-    fixedImageOrientation = fixClockOrientation(clockImg, clockImg, 0, 0)
+    fixedImageOrientation = fixClockOrientation(clockImg, clockImg, 10, 0)
     return fixedImageOrientation
 
 #this function gets the clock image, the degrees to rotate the image
@@ -19,17 +19,17 @@ def fixClockOrientation(originalImage, image, degree, degreeCounter):
 	if isOrientedCorrectly(image) == True:
 		if (globals.isDemo): print("image is now in correct orientation: ", degreeCounter, "degrees")
 		return image
-	elif degreeCounter >=360:
+	elif degree >=360:
 		if (globals.isDemo): print("the image is kept in its original orientation:")
 		return originalImage
 	else:
-		degreePlus = degree+2
-		rotatedImage = rotateImage(image,degreePlus)
+		degreePlus = degree+10
+		rotatedImage = rotateImage(originalImage,image,degreePlus)
 		return fixClockOrientation(originalImage, rotatedImage, degreePlus, degreeCounter)
 
 #rotate the specified image by the specified degrees
-def rotateImage(image,degree):
-	rotatedImg = imutils.rotate(image, degree)
+def rotateImage(originalImage,image,degree):
+	rotatedImg = imutils.rotate(originalImage, degree)
 	return rotatedImg
 
 #pass the results array and check if it contains a number from 1 to 12
