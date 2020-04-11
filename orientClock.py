@@ -7,7 +7,7 @@ import pytesseract
 
 # TODO: Implement this (somehow)
 def orientClock(clockImg):
-    #detectHours(clockImg)
+    detectHours(clockImg)
     return clockImg
 
 
@@ -62,14 +62,7 @@ def calculateScores(scoreMap, geometryMap):
 
 
 
-#TEMPORARY: FOR TESTING PURPOSES ONLY,
-#To be deleted later
-ap = argparse.ArgumentParser()
-ap.add_argument("-i", "--image", type=str,
-	help="path to input image")
-args = vars(ap.parse_args())
-# load the input image and grab the image dimensions
-image = cv2.imread(args["image"])
+
 
 def detectHours(image):
     orig = image.copy()

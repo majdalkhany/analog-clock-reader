@@ -11,10 +11,10 @@ from orientClock import orientClock
 def detectClock(fileName):
     clockImg = cv.imread("images/" + fileName)
     alignedImg = alignClock(clockImg)
-    isolatedImg = isolateClock(alignedImg)
-    orientedImg = orientClock(isolatedImg)
+    orientedImg = orientClock(alignedImg)
+    isolatedImg = isolateClock(orientedImg)
     clockHands = detectClockHands(isolatedImg)
-    time = calculateTime(clockHands, orientedImg)
+    time = calculateTime(clockHands, isolatedImg)
     return time
 
 if __name__ == "__main__":
