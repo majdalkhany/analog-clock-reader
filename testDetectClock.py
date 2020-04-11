@@ -38,7 +38,7 @@ testCases = [
 ]
 
 def testDetectClock():
-    print('{:>5} {:>16} {:>16} {:>16} {:>16} {:>16}'.format("Test", "Image", "Expected", "Actual", "Difference (s)", "Accuracy (%)"))
+    print('{:>5} {:>20} {:>16} {:>16} {:>16} {:>16}'.format("Test", "Image", "Expected", "Actual", "Difference (s)", "Accuracy (%)"))
     for i in range(0, len(testCases)):
         image = testCases[i][0]
         expected = testCases[i][1]
@@ -50,7 +50,7 @@ def testDetectClock():
         actualFormatted = actual if actual != None else "None"
         diff = calculateDifference(expected, actual) if actual != None else "-"
         accuracy = calculateAccuracy(diff) if actual != None else "0.00"
-        print('{:>5} {:>16} {:>16} {:>16} {:>16} {:>16}'.format(i + 1, image, expected, actualFormatted, diff, accuracy))
+        print('{:>5} {:>20} {:>16} {:>16} {:>16} {:>16}'.format(i + 1, image, expected, actualFormatted, diff, accuracy))
 
 if __name__ == "__main__":
     testDetectClock()
