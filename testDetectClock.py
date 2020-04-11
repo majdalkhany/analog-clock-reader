@@ -25,13 +25,14 @@ testCases = [
     ["clock1.jpg", "3:07:03"],
     ["clock1_skew.jpg", "3:07:03"],
     ["clock1_rotated.jpg", "3:07:03"],
-    ["clock7.jpg", "12:08:04"],
     ["clock2.jpg", "10:09:25"],
     ["clock2_skew.jpg", "10:09:25"],
     ["clock3.jpg", "10:10:38"],
     ["clock4.jpg", "4:37:36"],
     ["clock5.jpg", "10:09"],
     ["clock6.jpg", "2:39:51"],
+    ["clock7.jpg", "12:08:04"],
+    ["clock7_rotated.jpg", "12:08:04"],
     ["watch1.jpg", "10:09:33"],
     ["watch2.jpg", "10:09:36"]
 ]
@@ -41,7 +42,11 @@ def testDetectClock():
     for i in range(0, len(testCases)):
         image = testCases[i][0]
         expected = testCases[i][1]
-        actual = detectClock(image)
+
+        # Only perform orientClock step of algorithm if image is rotated
+        # The algorithm will work correctly of image is not rotated but doing so creates a bottleneck
+        actual = detectClock(image, skipOrientClock=(not "rotated" in image))
+
         actualFormatted = actual if actual != None else "None"
         diff = calculateDifference(expected, actual) if actual != None else "-"
         accuracy = calculateAccuracy(diff) if actual != None else "0.00"
