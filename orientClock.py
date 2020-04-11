@@ -9,7 +9,14 @@ import globals
 
 def orientClock(clockImg):
 	if (globals.isDemo): print("Orienting clock...")
-	return fixClockOrientation(clockImg, clockImg, 0)
+	orientedClock = fixClockOrientation(clockImg, clockImg, 0)
+
+	if (globals.isDemo):
+		cv2.imshow("Oriented image", orientedClock)
+		cv2.waitKey(0)
+		cv2.destroyAllWindows()
+
+	return orientedClock
 
 #this function gets the clock image, the degrees to rotate the image
 #and a degree counter. If it ends up rotating the image over 360 degrees
