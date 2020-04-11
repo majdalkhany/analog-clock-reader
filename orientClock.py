@@ -16,7 +16,7 @@ def orientClock(clockImg):
 #then it cancels whatever it did and returns the original image it received
 def fixClockOrientation(originalImage, image, degree):
 	if isOrientedCorrectly(image) == True:
-		if (globals.isDemo): 
+		if (globals.isDemo):
 			if (degree == 0): print("Clock is kept in its original orientation.")
 			else: print("Clock is now in correct orientation: ", degree, "degrees")
 		return image
@@ -39,11 +39,11 @@ def isOrientedCorrectly(image):
 	results = detectHours(image)
 	detectedNumbers = 0
 	res = [lis[1] for lis in results]
-	for hour in np.arange(1, 12, 1):
+	for hour in [1,2,3,4,5,7,8,10,11,12]:
 		for x in res:
-			if x == str(hour):
+			if (x == str(hour)) or (x == (str(hour)+"-")):
 				detectedNumbers = detectedNumbers+1
-	if detectedNumbers >= 2:
+	if detectedNumbers > 2:
 		return True
 	else:
 		return False
