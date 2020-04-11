@@ -1,6 +1,6 @@
 import cv2 as cv
 import numpy as np
-import globals
+from globals import isDemo
 
 cannyLowerThreshold = 50
 cannyUpperThreshold = 200
@@ -27,7 +27,7 @@ def alignClock(clockImg):
         return clockImg
 
     # Draw original image outline, circle, and bounding rect for testing purposes
-    if (globals.isDemo):
+    if (isDemo):
         drawImg = np.zeros_like(clockImg)
         cv.drawContours(drawImg, contours, 0, (255, 255, 255), cv.FILLED, 8, hierarchy)
         cv.circle(drawImg, (cx, cy), r, (0, 255, 0), 2)
@@ -42,7 +42,7 @@ def alignClock(clockImg):
     transMatrix = cv.getPerspectiveTransform(srcPoints, dstPoints)
     warpedImg = cv.warpPerspective(clockImg, transMatrix, (clockImg.shape[1], clockImg.shape[0]))
 
-    if (globals.isDemo):
+    if (isDemo):
         cv.imshow("Warped image", warpedImg)
         cv.waitKey(0)
         cv.destroyAllWindows()

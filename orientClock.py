@@ -24,6 +24,7 @@ def fixClockOrientation(originalImage, image, degree, degreeCounter):
 		return originalImage
 	else:
 		degreePlus = degree+10
+		print(degreePlus)
 		rotatedImage = rotateImage(originalImage,image,degreePlus)
 		return fixClockOrientation(originalImage, rotatedImage, degreePlus, degreeCounter)
 
