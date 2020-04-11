@@ -20,4 +20,11 @@ def isolateClock(clockImg):
     x = circles[0][0][0]
     y = circles[0][0][1]
     r = circles[0][0][2]
-    return gray[(y-r):(y+r), (x-r):(x+r)]
+    isolatedImg = gray[(y-r):(y+r), (x-r):(x+r)]
+
+    if (globals.isDemo):
+        cv.imshow("Isolated clock", isolatedImg)
+        cv.waitKey(0)
+        cv.destroyAllWindows()
+
+    return isolatedImg

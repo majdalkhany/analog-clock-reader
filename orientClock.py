@@ -22,7 +22,14 @@ import globals
 #correct orientation, if it needs to be re-oriented at all
 def orientClock(clockImg):
 	if (globals.isDemo): print("Orienting clock...")
-	return fixClockOrientation(clockImg, clockImg, 0)
+	orientedClock = fixClockOrientation(clockImg, clockImg, 0)
+
+	if (globals.isDemo):
+		cv2.imshow("Oriented image", orientedClock)
+		cv2.waitKey(0)
+		cv2.destroyAllWindows()
+
+	return orientedClock
 
 #this function gets the original clock image (which it maintains without
 #modifying at all), the rotated clock image, and the degrees to rotate the

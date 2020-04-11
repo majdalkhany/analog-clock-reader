@@ -11,6 +11,12 @@ from orientClock import orientClock
 # Passes image file into the function through the command line arguments
 def detectClock(fileName, skipOrientClock = False):
     clockImg = cv.imread("images/" + fileName)
+
+    if (globals.isDemo):
+        cv.imshow("Input image", clockImg)
+        cv.waitKey(0)
+        cv.destroyAllWindows()
+
     alignedImg = alignClock(clockImg)
 
     # orientClock is a bottleneck so we may want to suppress this step when running a test script

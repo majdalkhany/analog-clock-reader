@@ -28,13 +28,13 @@ def alignClock(clockImg):
 
     if (globals.isDemo): print("Aligning image...")
 
-    # Draw original image outline, circle, and bounding rect for testing purposes
+    # Draw original image outline, circle, and bounding rect
     if (globals.isDemo):
         drawImg = np.zeros_like(clockImg)
         cv.drawContours(drawImg, contours, 0, (255, 255, 255), cv.FILLED, 8, hierarchy)
         cv.circle(drawImg, (cx, cy), r, (0, 255, 0), 2)
         cv.rectangle(drawImg, (x, y), (x + w, y + h), (0, 0, 255), 2)
-        cv.imshow("Bounding rectangle (red), circle to warp to (green)", drawImg)
+        cv.imshow("Clock contour (white), bounding rectangle (red), circle to warp to (green)", drawImg)
         cv.waitKey(0)
         cv.destroyAllWindows()
 
@@ -45,7 +45,7 @@ def alignClock(clockImg):
     warpedImg = cv.warpPerspective(clockImg, transMatrix, (clockImg.shape[1], clockImg.shape[0]))
 
     if (globals.isDemo):
-        cv.imshow("Warped image", warpedImg)
+        cv.imshow("Image after perspective transform", warpedImg)
         cv.waitKey(0)
         cv.destroyAllWindows()
 
