@@ -5,7 +5,7 @@ import time
 import cv2
 import pytesseract
 import imutils
-
+import globals
 
 def orientClock(clockImg):
     fixedImageOrientation = fixClockOrientation(clockImg, clockImg, 0, 0)
@@ -17,10 +17,10 @@ def orientClock(clockImg):
 def fixClockOrientation(originalImage, image, degree, degreeCounter):
 	degreeCounter = degreeCounter+degree
 	if isOrientedCorrectly(image) == True:
-		print("image is now in correct orientation: ", degreeCounter, "degrees")
+		if (globals.isDemo): print("image is now in correct orientation: ", degreeCounter, "degrees")
 		return image
 	elif degreeCounter >=360:
-		print("the image is kept in its original orientation:")
+		if (globals.isDemo): print("the image is kept in its original orientation:")
 		return originalImage
 	else:
 		degreePlus = degree+2
@@ -45,7 +45,6 @@ def isOrientedCorrectly(image):
 		return True
 	else:
 		return False
-
 
 def calculateScores(scoreMap, geometryMap):
 	#get the dimensions of scoreMap
@@ -95,10 +94,6 @@ def calculateScores(scoreMap, geometryMap):
 			confidences.append(scoresData[y])
 	# return a tuple of the bounding boxes and associated confidences
 	return (rects, confidences)
-
-
-
-
 
 def detectHours(image):
     orig = image.copy()
