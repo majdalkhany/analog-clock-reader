@@ -3,14 +3,13 @@ import numpy as np
 import math
 import globals
 from utils import calculateAngle
-from utils import calculateDistance
 
 # Most of these values were fine tuned based on testing images
 cannyLowerThreshold = 100
 cannyUpperThreshold = 200
 houghLinesThreshold = 90
 houghLinesMinLineLength = 5
-houghLinesMaxLineGap = 10
+houghLinesMaxLineGap = 25
 
 # Returns three lines representing the hour, minute, and second hands (ie. [hour, minute, second])
 def detectClockHands(clockImg):

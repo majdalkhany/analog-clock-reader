@@ -1,6 +1,7 @@
 import sys
 import cv2 as cv
 import globals
+from utils import calculateAngle
 from alignClock import alignClock
 from calculateTime import calculateTime
 from detectClockHands import detectClockHands
