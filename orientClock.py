@@ -4,21 +4,12 @@ import argparse
 import time
 import cv2
 import pytesseract
-
-
-#TEMPORARY: FOR TESTING PURPOSES ONLY,
-#To be deleted later
-ap = argparse.ArgumentParser()
-ap.add_argument("-i", "--image", type=str,
-	help="path to input image")
-args = vars(ap.parse_args())
-# load the input image and grab the image dimensions
-image = cv2.imread(args["image"])
+import imutils
 
 
 def orientClock(clockImg):
     fixedImageOrientation = fixClockOrientation(clockImg, clockImg, 0, 0)
-    return
+    return fixedImageOrientation
 
 #this function gets the clock image, the degrees to rotate the image
 #and a degree counter. If it ends up rotating the image over 360 degrees
@@ -43,10 +34,9 @@ def rotateImage(image,degree):
 
 #pass the results array and check if it contains a number from 1 to 12
 def isOrientedCorrectly(image):
-	results = detectText(image)
+	results = detectHours(image)
 	detectedNumbers = 0
 	res = [lis[1] for lis in results]
-	print (res)
 	for hour in np.arange(1, 12, 1):
 		for x in res:
 			if x == str(hour):
@@ -181,6 +171,3 @@ def detectHours(image):
     # sort the results bounding box coordinates from top to bottom
     results = sorted(results, key=lambda r:r[0][1])
     return results
-
-
-print(detectHours(image))

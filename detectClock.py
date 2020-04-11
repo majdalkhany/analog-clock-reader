@@ -13,6 +13,7 @@ def detectClock(fileName):
     alignedImg = alignClock(clockImg)
     orientedImg = orientClock(alignedImg)
     isolatedImg = isolateClock(orientedImg)
+    #isolatedImg = isolateClock(alignedImg)
     clockHands = detectClockHands(isolatedImg)
     time = calculateTime(clockHands, isolatedImg)
     return time
