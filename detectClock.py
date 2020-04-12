@@ -8,6 +8,14 @@ from detectClockHands import detectClockHands
 from isolateClock import isolateClock
 from orientClock import orientClock
 
+# The main algorithm function that calls all other functions
+# 1. Imports image
+# 2. alignClock: aligns clock (if it is skew)
+# 3. orientClock: orients clock (if it is rotated)
+# 4. isolateClock: isolates image to only contain the clock
+# 5. detectClockHands: detects the clock's hands
+# 6. calculateTime: uses angles of clock hands to calculate the time 
+
 # Passes image file into the function through the command line arguments
 def detectClock(fileName, skipOrientClock = False):
     clockImg = cv.imread("images/" + fileName)

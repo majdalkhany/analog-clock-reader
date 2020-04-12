@@ -2,9 +2,11 @@ import cv2 as cv
 import numpy as np
 import globals
 
-# Detects the clock's outer circumference using Hough Transform
-# Returns the image cropped around the circle representing the clock's face
-# The center of the clock will be the center of the image
+# Isolates clock by cropping the image around the clock so the clock's center is the image center
+# 1. Convert image to greyscale and blur
+# 2. Apply HoughCircles to detect the clock's outer circumcerence
+# 3. Crop the image around this circumference
+
 def isolateClock(clockImg):
     if (globals.isDemo): print("Isolating clock...")
 
@@ -22,6 +24,7 @@ def isolateClock(clockImg):
     r = circles[0][0][2]
     isolatedImg = gray[(y-r):(y+r), (x-r):(x+r)]
 
+    # Display the isolated clock
     if (globals.isDemo):
         cv.imshow("Isolated clock", isolatedImg)
         cv.waitKey(0)
