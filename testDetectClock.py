@@ -17,7 +17,7 @@ def calculateDifference(time1, time2):
 # There are 43,200 possible times on a 12-hour clock (60 * 60 * 12)
 # Return the value truncated to 2 decimal places (not rounded)
 def calculateAccuracy(diff):
-    percentage = 100 - (diff / 43200)
+    percentage = 100 - ((diff / 43200) * 100)
     return math.floor(percentage * 10 ** 2) / 10 ** 2
 
 # [0] is image, [1] is expected result
