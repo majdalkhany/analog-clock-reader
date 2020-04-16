@@ -8,9 +8,9 @@ Layne Koftinow-Mikan - 101013563
 - Tesseract and PyTesseract
 
 ## How to run
-Command: python detectClock.py <image>
-Example: python detectClock.py clock1.jpg (images must be in the images folder)
-Running tets: python testDetectClock.py
+- Launch command: python detectClock.py <image>
+- Example: python detectClock.py clock1.jpg (images must be in the images folder)
+- Test framework launch command: python testDetectClock.py
 
 ## Project Proposal
 ### Summary
