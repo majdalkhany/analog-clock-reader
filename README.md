@@ -7,7 +7,7 @@ Layne Koftinow-Mikan - 101013563
 
 ## Requirements to run
 - OpenCV
-  - To view installation instructions for OpenCV, please refer to "OpenCV_installation_guide.pdf" file included in the repository. (Courtesy of Professor Azami)
+  - To view installation instructions for OpenCV, please refer to "OpenCV_installation_guide.pdf" file included in the "docs and demo" folder. (Courtesy of Professor Azami)
 - Tesseract and PyTesseract
   - For Windows, to install PyTesseract, do the following: (You can watch this video for the same instructions: https://www.youtube.com/watch?v=RewxjHw8310&feature=share&fbclid=IwAR1NvrCxufV39ckRTthwDon8e01NLZdBc7J_X6aTfgV1O7GnvnRbH0LLle4&ab_channel=AdityaPaiThon)
     - Download PyTesseract .exe from https://github.com/UB-Mannheim/tesseract/wiki
@@ -80,4 +80,7 @@ Week 10: Apr. 5 - Apr. 10
 - Majd: Final testing before due date
 
 ## Project Report
-See FinalWriteUp.pdf.
+See FinalWriteUp.pdf in the "docs and demo" folder.
+
+## Project Demo
+See demo.mp4 in the "docs and demo" folder.
