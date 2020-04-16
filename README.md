@@ -1,6 +1,8 @@
 # Analog Clock Reader
 COMP 4102 Final Project: Analog Clock Reader
+
 Majd Al Khany - 100977501
+
 Layne Koftinow-Mikan - 101013563
 
 ## Requirements to run
