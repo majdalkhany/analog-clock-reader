@@ -7,7 +7,7 @@ Layne Koftinow-Mikan - 101013563
 
 ## Requirements to run
 - OpenCV
-  - To view installation instructions for OpenCV, please refer to "OpenCV_installation_guide.pdf" file included in the repository.
+  - To view installation instructions for OpenCV, please refer to "OpenCV_installation_guide.pdf" file included in the repository. (Courtesy of Professor Azami)
 - Tesseract and PyTesseract
   - For Windows, to install PyTesseract, do the following:
     - Download PyTesseract .exe from https://github.com/UB-Mannheim/tesseract/wiki
