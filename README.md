@@ -7,7 +7,13 @@ Layne Koftinow-Mikan - 101013563
 
 ## Requirements to run
 - OpenCV
+To view installation instructions for OpenCV, please refer to "OpenCV_installation_guide.pdf" file included in the repository.
 - Tesseract and PyTesseract
+For Windows, to install PyTesseract, do the following:
+- Download PyTesseract .exe from https://github.com/UB-Mannheim/tesseract/wiki
+- Run the exe, and during the installation, make sure to copy the destination folder for the installation
+- Add the destination folder path to the environment path variables
+- To test the installation, open CMD and type "tesseract", it should give you usage and OCR options
 
 ## How to run
 - Launch command: python detectClock.py <image.jpg>
