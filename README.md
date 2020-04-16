@@ -30,8 +30,41 @@ Neither of us are familiar with computer vision algorithms so part of the challe
 
 ### Schedule
 Week 1: Feb. 2 - Feb. 8
+- Layne: Research and learn required algorithms
+- Majd: Research and learn required algorithms
 
-Layne: Research and learn required algorithms
+Week 2: Feb. 9 - Feb. 15
+- Layne: Design algorithms and program structure
+- Majd: Design algorithms and program structure
 
-Majd: Research and learn required algorithms
+Week 3: Feb. 16 - Feb. 22
+- Layne: Implement edge detection of hands
+- Majd: Implement OCR reading of numbers
 
+Week 4: Feb. 23 - Feb. 29
+- Layne: Implement time calculation of ideal clock
+- Majd: Implement OCR reading of numbers
+
+Week 5: Mar. 1 - Mar. 7
+- Layne: Account for rotated clock
+- Majd: Account for rotated clock
+
+Week 6: Mar. 8 - Mar. 14
+- Layne: Account for rotated clock
+- Majd: Account for rotated clock
+
+Week 7: Mar. 15 - Mar. 21
+- Layne: Account for misaligned clock
+- Majd: Account for misaligned clock
+
+Week 8: Mar. 22 - Mar. 28
+- Layne: Account for misaligned clock
+- Majd: Account for misaligned clock
+
+Week 9: Mar. 29 - Apr. 4
+- Layne: Develop mobile app if time permits
+- Majd: Improve existing algorithm implementations
+
+Week 10: Apr. 5 - Apr. 10
+- Layne: Develop mobile app if time permits
+- Majd: Final testing before due date
