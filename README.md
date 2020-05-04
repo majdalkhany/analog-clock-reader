@@ -53,3 +53,8 @@ Edge detection | ![Edge detection](https://github.com/majdalkhany/analog-clock-r
 Line detection | ![Line detection](https://github.com/majdalkhany/analog-clock-reader/blob/master/README_images/img4.png)
 Hand estimates | ![Hand estimates](https://github.com/majdalkhany/analog-clock-reader/blob/master/README_images/img5.png)
 Program output | ![Program output](https://github.com/majdalkhany/analog-clock-reader/blob/master/README_images/img6.png)
+
+## Test framework
+There is also a test script that runs through all of the images in the `images` folder and computes their accuracy compared the the expected result. Most discrepancies are due to "off by one" errors which are more pronounced for the hour hand (3600 seconds) compared to the minute hand (60 seconds). Another issue is inaccurate line detection resulting in the algorithm thinking the seconds hand is facing the opposite direction, hance the seconds being off by 30. Executing the test script results in the following output.
+
+![Program output](https://github.com/majdalkhany/analog-clock-reader/blob/master/README_images/img7.png)
