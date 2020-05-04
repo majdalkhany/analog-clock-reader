@@ -1,1 +1,1 @@
-isDemo = False
+is_demo = False
