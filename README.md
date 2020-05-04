@@ -43,3 +43,13 @@ Input: clock image
     2. Use angles of each hand to calculate time value
     3. Format time values and return a single string
 Output: string representing the time on the clock (hh:mm:ss)
+
+## Example
+Step | Screenshot
+------------ | -------------
+Input clock | ![Input image](https://github.com/majdalkhany/analog-clock-reader/blob/master/README_images/img1.png)
+Isolated clock | ![Isolated image](https://github.com/majdalkhany/analog-clock-reader/blob/master/README_images/img2.png)
+Edge detection | ![Edge detection](https://github.com/majdalkhany/analog-clock-reader/blob/master/README_images/img3.png)
+Line detection | ![Line detection](https://github.com/majdalkhany/analog-clock-reader/blob/master/README_images/img4.png)
+Hand estimates | ![Hand estimates](https://github.com/majdalkhany/analog-clock-reader/blob/master/README_images/img5.png)
+Program output | ![Program output](https://github.com/majdalkhany/analog-clock-reader/blob/master/README_images/img6.png)
