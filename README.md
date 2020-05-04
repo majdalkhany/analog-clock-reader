@@ -11,7 +11,7 @@ The analog clock reader consists of a set of algorithms, the input to which is a
 - Tesseract and PyTesseract
 
 ## How to run
-- Launch command: python detect_clock.py <image.jpg> (images must be in the images folder)
+- Launch command: python detect_clock.py <image.jpg> (image must be in the `images` folder)
 - Test script launch command: python test_detect_clock.py
 
 ## How the algorithm works
