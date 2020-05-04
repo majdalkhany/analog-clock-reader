@@ -1,9 +1,10 @@
 # Analog Clock Reader
-COMP 4102 Final Project (Winter 2020)
-
-Majd Al Khany - 100977501
-
+COMP 4102 Final Project (Winter 2020)  
+Majd Al Khany - 100977501  
 Layne Koftinow-Mikan - 101013563
+
+## Overview
+The analog clock reader consists of a set of algorithms, the input to which is an image of an analog clock and the output of which is simply a string representation of the time on the clock. The code for this project was written in Python and makes use of the OpenCV and Tesseract computer vision libraries. One of the goals of this project was to create a robust algorithm that provides a simple interface. While the input is a single image and the output is a single string, the program is designed to account for many different cases of an analog clock or watch image. This includes the ideal scenario wherein a clock has an hour, minute, and second hand, numbers, and is directly facing the camera. In addition to this, the algorithm supports non-ideal cases wherein the clock is misaligned, misoriented, or missing potential data points such as hands and numbers. This repository also contains a test script which determines the accuracy of the algorithm by comparing the expected results to the actual results and computing the difference.
 
 ## Requirements to run
 - OpenCV
