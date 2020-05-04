@@ -32,4 +32,3 @@ def isolate_clock(clock_img):
         cv.destroyAllWindows()
 
     return isolated_img
-    
